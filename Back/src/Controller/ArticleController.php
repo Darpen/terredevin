@@ -4,76 +4,100 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Entity\Category;
-use SimpleXMLElement;
+use App\Repository\ArticleRepository;
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\EntityManagerInterface;
+use PDO;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Normalizer\NormalizableInterface;
 
 class ArticleController extends AbstractController
 {
 
-    /**
-     * @Route("/AllArticle", name="AllArticle")
-     */
-    public function findAllArticle()
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
     {
-
-        $articles = $this->getDoctrine()
-            ->getRepository(Article::class)
-            ->findAll();
-
-        if (!$articles) {
-            // cause the 404 page not found to be displayed
-            throw $this->createNotFoundException();
-        }
-
-        return $this->render('rss/Article/Articles.html.twig', array(
-            'articles' => $articles
-        ));
+        $this->entityManager = $entityManager;
     }
 
     /**
-     * @Route("/Article/{$id}", name="Article")
-     * @param $title
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/articles", name="articles", methods={"GET"})
+     * @param ArticleRepository $articleRepository
+     * @return Response
      */
-    public function findOneArticle($id)
+    public function findAllArticle(ArticleRepository $articleRepository)
     {
 
-        $articles = $this->getDoctrine()
-            ->getRepository(Article::class)
-            ->findoneBy(array('id'=>$id));
+        $articles = $articleRepository->findAll();
+        $data = $this->get('serializer')->serialize($articles, 'json',['groups' => ['article']]);
 
-        if (!$articles) {
-            // cause the 404 page not found to be displayed
-            throw $this->createNotFoundException();
-        }
+        $response = new Response($data);
+        $response->headers->set('Content-Type', 'application/json');
 
-        return $this->render('rss/Article/Article.html.twig', array(
-            'articles' => $articles
-        ));
+        return $response;
     }
 
-
-
-/*
-    public function rss()
+    /**
+     * @Route("/article/{id}", name="article", methods={"GET"})
+     * @param Article $article
+     * @return Response
+     */
+    public function findOneArticle(Article $article)
     {
-        $rss = new DOMDocument();
-        $rss->load('https://www.terredevins.com/feed');
-        $encoded = array();
-        $limit=50;
-        foreach ($rss->getElementsByTagName('encoded') as $node)
-        {
-            $item = $node->getElementsByTagName('img')->item(0)->value;
-            array_push($encoded, $item);
-        }
-        for($x=0;$x<$limit;$x++) {
-            echo 'IMG -> '.$encoded[$x].'</br></br>';
-        }
-        return $this->render('rss/rss.html.twig', array(
-            'rss' => $rss->channel->item,
-        ));
+        $data = $this->get('serializer')->serialize($article, 'json',['groups' => ['article']]);
+
+        $response = new Response($data);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
     }
-    */
+
+    /**
+     * @Route("/article/{id}/category", name="article", methods={"GET"})
+     * @param Article $article
+     * @param Category $category
+     * @param $id
+     * @return Response
+     */
+    public function findArticle(Article $article,Category $category,$id)
+    {
+        $articles = $this->getDoctrine()->getRepository(Article::class)->findOneBy(array('id'=>$id));
+        $data = $this->get('serializer')->serialize($articles, 'json');
+
+        $response = new Response($data);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    /**
+     * @Route("/category/{id}/article", name="article", methods={"GET"}, requirements={"id":"\d+"})
+     * @param Article $article
+     * @param Category $category
+     * @param $id
+     * @return Response
+     * @throws DBALException
+     */
+    public function findArticlesbyCategory(Article $article,Category $category,$id)
+    {
+        $rawSql = "SELECT article.* FROM `category`
+        LEFT JOIN `article_category` ON `article_category`.`category_id` = `category`.`id`
+        LEFT JOIN `article` ON `article_category`.`article_id` = `article`.`id`
+        WHERE category.id = $id ";
+        $stmt = $this->entityManager->getConnection()->prepare($rawSql);
+        $stmt->execute([]);
+
+        $resultat = $stmt->fetchAll();
+        $data = $this->get('serializer')->serialize($resultat, 'json');
+
+        $response = new Response($data);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
 }

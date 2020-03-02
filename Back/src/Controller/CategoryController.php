@@ -2,78 +2,47 @@
 
 namespace App\Controller;
 
-use App\Entity\Article;
+
 use App\Entity\Category;
-use SimpleXMLElement;
+use App\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CategoryController extends AbstractController
 {
 
     /**
-     * @Route("/AllCategory", name="AllCategory")
+     * @Route("/categories", name="categories", methods={"GET"})
+     * @param CategoryRepository $categoryRepository
+     * @return Response
      */
-
-    public function findAllCategory()
+    public function findCategory(CategoryRepository $categoryRepository)
     {
 
-        $categorys = $this->getDoctrine()
-            ->getRepository(Article::class)
-            ->findAll();
+        $categories = $categoryRepository->findAll();
+        $data = $this->get('serializer')->serialize($categories, 'json',['groups' => ['category']]);
 
-        if (!$categorys) {
-            // cause the 404 page not found to be displayed
-            throw $this->createNotFoundException();
-        }
+        $response = new Response($data);
+        $response->headers->set('Content-Type', 'application/json');
 
-        return $this->render('rss/Category/Categorys.html.twig', array(
-            'categorys' => $categorys
-        ));
+        return $response;
     }
 
     /**
-     * @Route("/Category/{$title}", name="AllCategory")
-     * @param $title
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/category/{id}", name="category", methods={"GET"})
+     * @param Category $category
+     * @return Response
      */
-
-    public function findOneCategory($title)
+    public function findOneArticle(Category $category)
     {
+        $data = $this->get('serializer')->serialize($category, 'json',['groups' => ['category']]);
 
-        $categorys = $this->getDoctrine()
-            ->getRepository(Article::class)
-            ->findoneBy(array('id'=>$id));
+        $response = new Response($data);
+        $response->headers->set('Content-Type', 'application/json');
 
-        if (!$categorys) {
-            // cause the 404 page not found to be displayed
-            throw $this->createNotFoundException();
-        }
-
-        return $this->render('rss/Category/Category.html.twig', array(
-            'categorys' => $categorys
-        ));
+        return $response;
     }
-
-/*
-    public function rss()
-    {
-        $rss = new DOMDocument();
-        $rss->load('https://www.terredevins.com/feed');
-        $encoded = array();
-        $limit=50;
-        foreach ($rss->getElementsByTagName('encoded') as $node)
-        {
-            $item = $node->getElementsByTagName('img')->item(0)->value;
-            array_push($encoded, $item);
-        }
-        for($x=0;$x<$limit;$x++) {
-            echo 'IMG -> '.$encoded[$x].'</br></br>';
-        }
-        return $this->render('rss/rss.html.twig', array(
-            'rss' => $rss->channel->item,
-        ));
-    }
-    */
 }

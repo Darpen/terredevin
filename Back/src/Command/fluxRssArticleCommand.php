@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
 class fluxRssArticleCommand extends Command
 {
 
-    protected static $defaultName = 'app:rss';
+    protected static $defaultName = 'app:rssArticleCategory';
 
 
     // ...
@@ -67,19 +67,19 @@ class fluxRssArticleCommand extends Command
         $fluxRssHome = simplexml_load_file($urlHome);
         $itemsHome = $fluxRssHome->channel->item;
 
-        foreach($itemsHome as $item ){
+        foreach($itemsHome as $item ) {
 
             $title = $item->title;
             $link = $item->link;
             $comments = $item->comments;
             $pubDate = $item->pubDate;
-            $pubDateFinal = date('Y-m-d',strtotime($pubDate));
+            $pubDateFinal = date('Y-m-d', strtotime($pubDate));
             $dc = $item->children($nsHome['dc']);
             $categories = array();
-            foreach ($item->category as $category){
+            foreach ($item->category as $category) {
                 $categories[] = $doctrine
                     ->getRepository(Category::class)
-                    ->findCategoryByArticle($category->__toString());
+                    ->findCategoryByName($category->__toString());
             }
             $guid = $item->guid;
             $description = $item->description;
@@ -87,30 +87,35 @@ class fluxRssArticleCommand extends Command
             $wfw = $item->children($nsHome['wfw']);
             $slash = $item->children($nsHome['slash']);
 
+            $articleUpdate = $doctrine
+                ->getRepository(Article::class)
+                ->findArticleByTitle($title->__toString());
 
-            $article = new Article();
-            foreach ($categories as $category){
-                $article->addCategory($category);
+            if (($articleUpdate === False)) {
+
+                $article = new Article();
+                foreach ($categories as $category) {
+                    $article->addCategory($category);
+                }
+
+                $article->setTitle($title);
+                $article->setLink($link);
+                $article->setComments($comments);
+                $article->setPubDate(new \DateTime($pubDateFinal));
+                $article->setCreator($dc);
+                $article->setGuid($guid);
+                $article->setDescription($description);
+                $article->setContent($content);
+                $article->setCommentRss($wfw);
+                $article->setCommentsSlash($slash);
+
+                // tells Doctrine you want to (eventually) save the Article (no queries yet)
+                $doctrine->persist($category);
+                $doctrine->persist($article);
+                // actually executes the queries (i.e. the INSERT query)
+                $doctrine->flush();
+                $output->writeln('Récupération des Articles et leurs Categorys !');
             }
-
-            $article->setTitle($title);
-            $article->setLink($link);
-            $article->setComments($comments);
-            $article->setPubDate(new \DateTime($pubDateFinal));
-            $article->setCreator($dc);
-            $article->setGuid($guid);
-            $article->setDescription($description);
-            $article->setContent($content);
-            $article->setCommentRss($wfw);
-            $article->setCommentsSlash($slash);
-
-            // tells Doctrine you want to (eventually) save the Article (no queries yet)
-            $doctrine->persist($category);
-            $doctrine->persist($article);
-            // actually executes the queries (i.e. the INSERT query)
-            $doctrine->flush();
-            $output->writeln('Récupération des Articles et leurs Categorys !');
-
         }
 
         return 0;

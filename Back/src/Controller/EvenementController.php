@@ -2,78 +2,48 @@
 
 namespace App\Controller;
 
-use App\Entity\Article;
-use App\Entity\Category;
+
 use App\Entity\Evenement;
-use SimpleXMLElement;
+use App\Repository\EvenementRepository;
+use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class EvenementController extends AbstractController
 {
 
     /**
-     * @Route("/AllEvenement", name="AllEvenement")
+     * @Route("/evenements", name="evenements", methods={"GET"})
+     * @param EvenementRepository $evenementRepository
+     * @return Response
      */
-
-    public function findAllEvenement()
+    public function findEvenements(EvenementRepository $evenementRepository)
     {
 
-        $evenements = $this->getDoctrine()
-            ->getRepository(Evenement::class)
-            ->findAll();
+        $evenements = $evenementRepository->findAll();
+        $data = $this->get('serializer')->serialize($evenements, 'json',['groups' => ['evenement']]);
 
-        if (!$evenements) {
-            // cause the 404 page not found to be displayed
-            throw $this->createNotFoundException();
-        }
+        $response = new Response($data);
+        $response->headers->set('Content-Type', 'application/json');
 
-        return $this->render('rss/Evenement/Evenements.html.twig', array(
-            'rssEvenements' => $evenements
-        ));
+        return $response;
     }
 
     /**
-     * @Route("/Evenement/{$title}", name="Evenement")
-     * @param $title
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/evenement/{id}", name="evenement", methods={"GET"})
+     * @param Evenement $evenement
+     * @return Response
      */
-    public function findOneEvenement($title)
+    public function findOneEvenement(Evenement $evenement)
     {
+        $data = $this->get('serializer')->serialize($evenement, 'json',['groups' => ['evenement']]);
 
-        $evenements = $this->getDoctrine()
-            ->getRepository(Article::class)
-            ->findoneBy(array('title'=>$title));
+        $response = new Response($data);
+        $response->headers->set('Content-Type', 'application/json');
 
-        if (!$evenements) {
-            // cause the 404 page not found to be displayed
-            throw $this->createNotFoundException();
-        }
-
-        return $this->render('rss/Evenement/Evenement.html.twig', array(
-            'evenements' => $evenements
-        ));
+        return $response;
     }
 
-/*
-    public function rss()
-    {
-        $rss = new DOMDocument();
-        $rss->load('https://www.terredevins.com/feed');
-        $encoded = array();
-        $limit=50;
-        foreach ($rss->getElementsByTagName('encoded') as $node)
-        {
-            $item = $node->getElementsByTagName('img')->item(0)->value;
-            array_push($encoded, $item);
-        }
-        for($x=0;$x<$limit;$x++) {
-            echo 'IMG -> '.$encoded[$x].'</br></br>';
-        }
-        return $this->render('rss/rss.html.twig', array(
-            'rss' => $rss->channel->item,
-        ));
-    }
-    */
 }

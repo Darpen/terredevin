@@ -7,8 +7,6 @@ use App\Entity\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
 
 /**
  * @method Category|null find($id, $lockMode = null, $lockVersion = null)
@@ -26,20 +24,16 @@ class CategoryRepository extends ServiceEntityRepository
         $this->entityManager = $entityManager;
     }
 
-    public function findCategoryByArticle($value)
+    public function findCategoryByName($value)
     {
-
 
         $doctrine = $this->entityManager;
 
-
-           $category = $doctrine
+           $categoryUpdate = $doctrine
                ->getRepository(Category::class)
                ->findOneBy(['name' => $value]);
 
-
-
-        if(is_null($category)) {
+        if(is_null($categoryUpdate)) {
             $category = new Category();
             $category->setName($value);
 
@@ -49,7 +43,7 @@ class CategoryRepository extends ServiceEntityRepository
             $doctrine->flush();
             return $category;
         }
-    return $category;
+    return $categoryUpdate;
 
     }
     // /**
