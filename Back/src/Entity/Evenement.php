@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -13,56 +14,67 @@ class Evenement
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("evenement")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("evenement")
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("evenement")
      */
     private $link;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("evenement")
      */
     private $comments;
 
     /**
      * @ORM\Column(type="date")
+     * @Groups("evenement")
      */
     private $pubDate;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("evenement")
      */
     private $creator;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("evenement")
      */
     private $guid;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups("evenement")
      */
     private $description;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups("evenement")
      */
     private $content;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("evenement")
      */
     private $commentRss;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("evenement")
      */
     private $commentsSlash;
 

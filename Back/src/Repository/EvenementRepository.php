@@ -2,9 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\Article;
 use App\Entity\Evenement;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @method Evenement|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,9 +16,32 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  */
 class EvenementRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager)
     {
-        parent::__construct($registry, Evenement::class);
+        parent::__construct($registry, Article::class);
+        $this->entityManager = $entityManager;
+    }
+
+    public function findEvenementByTitle($value)
+    {
+
+        $doctrine = $this->entityManager;
+
+        $evenementUpdate = $doctrine
+            ->getRepository(Evenement::class)
+            ->findOneBy(['title' => $value]);
+
+        if (is_null($evenementUpdate)) {
+            return False;
+        }
+        else{
+            return True;
+        }
     }
 
     // /**

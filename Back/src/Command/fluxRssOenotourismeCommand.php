@@ -20,7 +20,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
 class fluxRssOenotourismeCommand extends Command
 {
 
-    protected static $defaultName = 'app:aa';
+    protected static $defaultName = 'app:rssOenotourisme';
 
 
     // ...

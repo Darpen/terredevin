@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Article;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @method Article|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,11 +15,30 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  */
 class ArticleRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $entityManager;
+
+    public function __construct(ManagerRegistry $registry,EntityManagerInterface $entityManager)
     {
         parent::__construct($registry, Article::class);
+        $this->entityManager = $entityManager;
     }
 
+    public function findArticleByTitle($value)
+    {
+
+        $doctrine = $this->entityManager;
+
+        $article = $doctrine
+            ->getRepository(Article::class)
+            ->findOneBy(['title' => $value]);
+
+        if (is_null($article)) {
+            return False;
+        }
+        else{
+            return True;
+        }
+    }
     // /**
     //  * @return Article[] Returns an array of Article objects
     //  */

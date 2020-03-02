@@ -20,7 +20,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
 class fluxRssEvenementCommand extends Command
 {
 
-    protected static $defaultName = 'app:a';
+    protected static $defaultName = 'app:rssEvenement';
 
 
     // ...
@@ -80,29 +80,35 @@ class fluxRssEvenementCommand extends Command
             $wfw = $item->children($nsEvenement['wfw']);
             $slash = $item->children($nsEvenement['slash']);
 
-            $evenement = new Evenement();
+            $evenementUpdate = $doctrine
+                ->getRepository(Evenement::class)
+                ->findEvenementByTitle($title->__toString());
 
-            $evenement->setTitle($title);
-            $evenement->setLink($link);
-            $evenement->setComments($comments);
-            $evenement->setPubDate(new \DateTime($pubDateFinal));
-            $evenement->setCreator($dc);
-            $evenement->setGuid($guid);
-            $evenement->setDescription($description);
-            $evenement->setContent($content);
-            $evenement->setCommentRss($wfw);
-            $evenement->setCommentsSlash($slash);
+            if (($evenementUpdate === False)) {
+                $evenement = new Evenement();
 
-            // tells Doctrine you want to (eventually) save the Article (no queries yet)
-            $doctrine->persist($evenement);
-            // actually executes the queries (i.e. the INSERT query)
-            $doctrine->flush();
-            $output->writeln('Récupération des Evénements !');
+                $evenement->setTitle($title);
+                $evenement->setLink($link);
+                $evenement->setComments($comments);
+                $evenement->setPubDate(new \DateTime($pubDateFinal));
+                $evenement->setCreator($dc);
+                $evenement->setGuid($guid);
+                $evenement->setDescription($description);
+                $evenement->setContent($content);
+                $evenement->setCommentRss($wfw);
+                $evenement->setCommentsSlash($slash);
 
-            // actually executes the queries (i.e. the INSERT query)
-            $doctrine->flush();
-            $output->writeln('Récupération des Articles et leurs Categorys !');
+                // tells Doctrine you want to (eventually) save the Article (no queries yet)
+                $doctrine->persist($evenement);
+                // actually executes the queries (i.e. the INSERT query)
+                $doctrine->flush();
+                $output->writeln('Récupération des Evénements !');
 
+                // actually executes the queries (i.e. the INSERT query)
+                $doctrine->flush();
+                $output->writeln('Récupération des Articles et leurs Categorys !');
+
+            }
         }
 
         return 0;
