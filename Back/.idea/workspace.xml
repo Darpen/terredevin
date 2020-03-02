@@ -151,6 +151,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="C:/wamp64/www/Gameofhoney" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -199,7 +200,7 @@
       <workItem from="1582647302666" duration="1286000" />
       <workItem from="1582652752273" duration="1039000" />
       <workItem from="1582700031483" duration="33401000" />
-      <workItem from="1583136135533" duration="2373000" />
+      <workItem from="1583136135533" duration="7364000" />
     </task>
     <servers />
   </component>
@@ -223,6 +224,10 @@
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="549" y="188" key="FileChooserDialogImpl/0.0.1536.864@0.0.1536.864" timestamp="1583136680472" />
+    <state x="277" y="76" key="SettingsEditor" timestamp="1583160613619">
+      <screen x="0" y="0" width="1536" height="864" />
+    </state>
+    <state x="277" y="76" key="SettingsEditor/0.0.1536.864@0.0.1536.864" timestamp="1583160613619" />
     <state x="858" y="146" width="582" height="664" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog" timestamp="1582013289548">
       <screen x="0" y="0" width="1536" height="864" />
     </state>

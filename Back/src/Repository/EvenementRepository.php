@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\Entity\Article;
 use App\Entity\Evenement;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -23,7 +22,7 @@ class EvenementRepository extends ServiceEntityRepository
 
     public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager)
     {
-        parent::__construct($registry, Article::class);
+        parent::__construct($registry, Evenement::class);
         $this->entityManager = $entityManager;
     }
 

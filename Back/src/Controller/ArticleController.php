@@ -7,7 +7,6 @@ use App\Entity\Category;
 use App\Repository\ArticleRepository;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManagerInterface;
-use PDO;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,24 +48,6 @@ class ArticleController extends AbstractController
     public function findOneArticle(Article $article)
     {
         $data = $this->get('serializer')->serialize($article, 'json',['groups' => ['article']]);
-
-        $response = new Response($data);
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
-    }
-
-    /**
-     * @Route("/article/{id}/category", name="article", methods={"GET"})
-     * @param Article $article
-     * @param Category $category
-     * @param $id
-     * @return Response
-     */
-    public function findArticle(Article $article,Category $category,$id)
-    {
-        $articles = $this->getDoctrine()->getRepository(Article::class)->findOneBy(array('id'=>$id));
-        $data = $this->get('serializer')->serialize($articles, 'json');
 
         $response = new Response($data);
         $response->headers->set('Content-Type', 'application/json');
