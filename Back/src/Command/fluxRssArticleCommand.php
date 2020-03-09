@@ -18,16 +18,29 @@ use Doctrine\DBAL\Driver\Connection;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Validator\Constraints\DateTime;
 
+/**
+ *
+ * Description de la Command de fluxRssArticleCategory :
+ *
+ * Command qui gére la récupération du flux Rss des entity Article et Category.
+ *
+ * Class fluxRssArticleCategoryCommand
+ * @package App\Command
+ */
 class fluxRssArticleCommand extends Command
 {
 
     protected static $defaultName = 'app:rssArticleCategory';
 
-
-    // ...
-    // ...
+    /**
+     * @var EntityManagerInterface
+     */
     private $entityManager;
 
+    /**
+     * fluxRssArticleCategoryCommand constructor.
+     * @param EntityManagerInterface $entityManager
+     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         parent::__construct();
@@ -36,8 +49,9 @@ class fluxRssArticleCommand extends Command
 
 
     /**
-     * @CronJob("*\/5 * * * *")
-     * Will be executed every 5 minutes
+     *
+     * Fonction d'éxecution de la command pour la récupération du FluxRss concernant Article et Category.
+     *
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return
@@ -47,24 +61,17 @@ class fluxRssArticleCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
 
-        /***
-         * Partie Suppression des données
-         *
-         *
-        $doctrineTruncate = $this->entityManager->getConnection();
-        $platform   = $doctrineTruncate->getDatabasePlatform();
-        $doctrineTruncate->executeUpdate($platform->getTruncateTableSQL('article', true ));
-        $doctrineTruncate->executeUpdate($platform->getTruncateTableSQL('evenement', true ));
-        ***/
-
+        /** Déclaration de l'entityManager */
         $doctrine = $this->entityManager;
-
-        // Partie Category -Article
-
+        /** L'url du flux Rss */
         $urlHome = "https://www.terredevins.com/feed";
+        /** Déclaration d'unenouvelle instance de la classe SimpleXMLElement */
         $xmlHome = new SimpleXMLElement($urlHome, null, true);
+        /**  */
         $nsHome = $xmlHome->getNamespaces(true);
+        /** Déclaration de l'entityManager */
         $fluxRssHome = simplexml_load_file($urlHome);
+        /** Déclaration de l'entityManager */
         $itemsHome = $fluxRssHome->channel->item;
 
         foreach($itemsHome as $item ) {

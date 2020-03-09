@@ -36,7 +36,7 @@ class CategoryController extends AbstractController
      * @param Category $category
      * @return Response
      */
-    public function findOneArticle(Category $category)
+    public function findOneCategory(Category $category)
     {
         $data = $this->get('serializer')->serialize($category, 'json',['groups' => ['category']]);
 

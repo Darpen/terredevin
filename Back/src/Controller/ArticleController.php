@@ -56,15 +56,19 @@ class ArticleController extends AbstractController
     }
 
     /**
-     * @Route("/category/{id}/article", name="article", methods={"GET"}, requirements={"id":"\d+"})
+     * @Route("/category/{id}/article", name="articlecategory", methods={"GET"}, requirements={"id":"\d+"})
      * @param Article $article
      * @param Category $category
      * @param $id
      * @return Response
      * @throws DBALException
+     *
+     *  Description :
+     * lkfjgoijrtgpojrtpogjrt
      */
     public function findArticlesbyCategory(Article $article,Category $category,$id)
     {
+        //
         $rawSql = "SELECT article.* FROM `category`
         LEFT JOIN `article_category` ON `article_category`.`category_id` = `category`.`id`
         LEFT JOIN `article` ON `article_category`.`article_id` = `article`.`id`
