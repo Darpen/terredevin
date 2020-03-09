@@ -7,6 +7,11 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
+ *
+ * Description du Répository de l'Oenotourisme :
+ *
+ * Aucune méthode défini
+ *
  * @method Oenotourisme|null find($id, $lockMode = null, $lockVersion = null)
  * @method Oenotourisme|null findOneBy(array $criteria, array $orderBy = null)
  * @method Oenotourisme[]    findAll()
@@ -18,33 +23,4 @@ class OenotourismeRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Oenotourisme::class);
     }
-
-    // /**
-    //  * @return Oenotourisme[] Returns an array of Oenotourisme objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('o.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Oenotourisme
-    {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
