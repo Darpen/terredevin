@@ -5,8 +5,10 @@
         "php": "^7.1.3",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "ext-json": "*",
         "ext-simplexml": "*",
         "jms/serializer-bundle": "^3.5",
+        "nelmio/cors-bundle": "^2.0",
         "sensio/framework-extra-bundle": "^5.5",
         "symfony/asset": "4.4.*",
         "symfony/console": "4.4.*",
@@ -28,8 +30,7 @@
         "symfony/twig-pack": "*",
         "symfony/validator": "4.4.*",
         "symfony/web-link": "4.4.*",
-        "symfony/yaml": "4.4.*",
-        "ext-json": "*"
+        "symfony/yaml": "4.4.*"
     },
     "require-dev": {
         "symfony/debug-pack": "*",
