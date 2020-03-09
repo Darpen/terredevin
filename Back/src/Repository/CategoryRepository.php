@@ -24,6 +24,10 @@ class CategoryRepository extends ServiceEntityRepository
         $this->entityManager = $entityManager;
     }
 
+    /**
+     * @param $value
+     * @return Category|object|null
+     */
     public function findCategoryByName($value)
     {
 
@@ -46,32 +50,4 @@ class CategoryRepository extends ServiceEntityRepository
     return $categoryUpdate;
 
     }
-    // /**
-    //  * @return Category[] Returns an array of Category objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Category
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
