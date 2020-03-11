@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 
-class Post extends React.Component{
+class FirstPost extends React.Component{
 
     render(){
         return(
@@ -9,10 +9,10 @@ class Post extends React.Component{
                 <View style = { styles.picture }>
                     <Image 
                         style = { styles.picture }
-                        source = {{uri:'https://www.vinotrip.com/fr/blog/wp-content/uploads/2016/02/exportation-vin1.png'}}
+                        source={ require('../images/verre.png' )}
                     />
                 </View>
-                <View style = { styles.texts }>
+                <View>
                     <Text style = { styles.title }>{ this.props.post.title }</Text>
                     <View style = { styles.category }>
                         <View style = {styles.vline}></View>
@@ -20,29 +20,24 @@ class Post extends React.Component{
                     </View>
                 </View>
             </View>
-        );
+        )
     }
 }
 
-export default Post;
+export default FirstPost;
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: 'row',
-        margin: 12,
-        // borderColor: 'yellowgreen',
+        marginHorizontal: 12,
+        // borderColor: 'orange',
         // borderWidth: 1
     },
     picture:{
-        width: 100,
-        height: 100,
+        width: '100%',
+        height: 200,
         // borderColor: 'red',
         // borderWidth: 1
-    },
-    texts:{
-        flexShrink: 1,
-        justifyContent: 'space-between',
     },
     title:{
         flexShrink: 1,
