@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
         padding: 8,
         flexDirection: 'row',
         justifyContent: 'center',
+        zIndex : 999,
         marginTop: 34,
         // borderColor: 'blue',
         // borderWidth: 1,

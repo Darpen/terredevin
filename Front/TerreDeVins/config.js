@@ -1,3 +1,3 @@
 export default {
-    APIlink : "http://dfa98abd.ngrok.io/articles"
+    APIlink : "http://58a36505.ngrok.io"
 }

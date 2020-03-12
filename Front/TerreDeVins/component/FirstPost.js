@@ -27,34 +27,34 @@ class FirstPost extends React.Component{
 export default FirstPost;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        marginHorizontal: 12,
+    container : {
+        flex : 1,
+        margin : 12,
         // borderColor: 'orange',
         // borderWidth: 1
     },
-    picture:{
-        width: '100%',
-        height: 200,
+    picture : {
+        width : '100%',
+        height : 200,
         // borderColor: 'red',
         // borderWidth: 1
     },
-    title:{
-        flexShrink: 1,
-        fontSize: 18,
-        marginHorizontal: 4,
+    title : {
+        flexShrink : 1,
+        fontSize : 18,
+        marginHorizontal : 4,
     },
-    vline:{
-        width: 2,
-        height: 16,
-        margin: 4,
-        backgroundColor: '#79C744'
+    vline : {
+        width : 2,
+        height : 16,
+        margin : 4,
+        backgroundColor : '#79C744'
     },
-    category:{
-        flexDirection: 'row',
-        alignItems: 'center',
+    category : {
+        flexDirection : 'row',
+        alignItems : 'center',
     },
-    category_name:{
-        color: '#5A5858',
+    category_name : {
+        color : '#5A5858',
     }
 });
