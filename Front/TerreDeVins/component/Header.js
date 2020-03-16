@@ -1,16 +1,16 @@
 import React from 'react';
-import {View, StyleSheet, Image} from 'react-native';
+import {View, StyleSheet, Image, TouchableOpacity} from 'react-native';
 
 class Header extends React.Component{
 
     render(){
         return(
-            <View style = { styles.header}>
-                <View style = { styles.burger }>
+            <View style = { styles.header} >
+                <TouchableOpacity style = { styles.burger } onPress = { this.props.handleShowMenu }>
                     <Image 
-                        source = { require('../images/burger.png') }
+                        source = { this.props.show_menu ? require('../images/cross.png') : require('../images/burger.png') }
                     />
-                </View>
+                </TouchableOpacity>
                 <View style = { styles.logo }>
                     <Image
                         source = { require('../images/Logo.png') }

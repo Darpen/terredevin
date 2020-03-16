@@ -7,7 +7,7 @@ class Menu extends React.Component {
 
     render(){
         return(
-            <View style = { styles.container }>
+            <View style = { this.props.show_menu ? styles.containerOpen : styles.container }>
                     <View>
                         <Image 
                             source = { require( '../images/vignes.png' ) }
@@ -61,6 +61,14 @@ export default Menu;
 
 const styles = StyleSheet.create({
     container : {
+        width : '75%',
+        height : '100%',
+        marginTop : 122,
+        position : 'absolute',
+        left : '-100%',
+        alignSelf : 'center',
+    },
+    containerOpen : {
         width : '75%',
         height : '100%',
         marginTop : 122,

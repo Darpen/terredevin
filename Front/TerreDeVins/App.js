@@ -6,7 +6,6 @@ import Header from './component/Header';
 import Event from './component/Event';
 import FirstPost from './component/FirstPost';
 import Post from './component/Post';
-import Footer from './component/Footer';
 import Menu from './component/Menu';
 
 class App extends React.Component {
@@ -15,7 +14,8 @@ class App extends React.Component {
     super(props);
     this.state = {
       posts : [],
-      event : {}
+      event : {},
+      show_menu : false,
     }
   }
 
@@ -29,13 +29,24 @@ class App extends React.Component {
     .catch( error => console.log( error ))
   }
 
+  handleShowMenu = () => {
+    this.state.show_menu ? (
+      this.setState({ show_menu : false })
+    ) : (
+      this.setState({ show_menu : true })
+    )
+  }
+
 
   render(){
     return (
       <View style = { styles.body }>
-        <Header />
+        <Header 
+          handleShowMenu = { this.handleShowMenu }
+          show_menu = { this.state.show_menu }  
+        />
         <ScrollView>          
-          <Event event = { this.state.event }/>
+          <Event event = { this.state.event } />
           {this.state.posts.map((post, index) => {
             return index === 0 ? 
               <FirstPost post = { post } />
@@ -43,8 +54,7 @@ class App extends React.Component {
               <Post post = { post } />          
           })}
           </ScrollView>
-          <Footer />
-          <Menu />
+          <Menu show_menu = { this.state.show_menu } />
       </View>
     );
   }  
