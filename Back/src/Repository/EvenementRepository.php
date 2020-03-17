@@ -20,22 +20,35 @@ class EvenementRepository extends ServiceEntityRepository
      */
     private $entityManager;
 
+    /**
+     * EvenementRepository constructor.
+     * @param ManagerRegistry $registry
+     * @param EntityManagerInterface $entityManager
+     */
     public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager)
     {
-        parent::__construct($registry, Evenement::class); // recupere le __construct parent
-        $this->entityManager = $entityManager; // creer une entite pour se connecter a la base
+        parent::__construct($registry, Evenement::class);
+        $this->entityManager = $entityManager;
     }
 
-    public function findEvenementByTitle($value)
-    {// Trouver un evenement par son titre ($value)
+    /**
+     * @param $value
+     * @return bool
+     *
+     * Description :
+     * Récupère tous les événements par leurs titre et mets à jour ceux qui n'éxiste pas
+     */
+    public function findEvenementByTitle($value){
 
-        $doctrine = $this->entityManager; // pour se connecter a doctrine
+        $doctrine = $this->entityManager;
 
+        /** Récupère tous les événements par leurs titre */
         $evenementUpdate = $doctrine
-            ->getRepository(Evenement::class) // Verifie si l'article existe deja
-            ->findOneBy(['title' => $value]); // Trouver 1 article pour titre=$value
+            ->getRepository(Evenement::class)
+            ->findOneBy(['title' => $value]);
 
-        if (is_null($evenementUpdate)) { // si pas de titre pour la valeur, return faux
+        /** Mets à jour les événements qui n'existe pas */
+        if (is_null($evenementUpdate)) {
             return False;
         }
         else{

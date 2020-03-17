@@ -20,26 +20,35 @@ class CategoryRepository extends ServiceEntityRepository
 
     public function __construct(ManagerRegistry $registry,EntityManagerInterface $entityManager)
     {
-        parent::__construct($registry, Category::class); // recupere le __construct parent 
-        $this->entityManager = $entityManager; // creer une entite pour se connecter a la base
+        parent::__construct($registry, Category::class);
+        $this->entityManager = $entityManager;
     }
 
+    /**
+     * @param $value
+     * @return Category|object|null
+     *
+     * Description :
+     * Récupère tous les categories par leurs titre et mets à jour celles qui n'éxiste pas
+     */
     public function findCategoryByName($value)
-    {// Trouver une categorie par son nom ($value)
+    {
 
-        $doctrine = $this->entityManager; // pour se connecter a doctrine
+        $doctrine = $this->entityManager;
 
+        /** Récupère tous les categories par leurs nom */
            $categoryUpdate = $doctrine
-               ->getRepository(Category::class) // Verifie si la categorie existe deja
-               ->findOneBy(['name' => $value]); // Trouver 1 categorie a nom=$value
+               ->getRepository(Category::class)
+               ->findOneBy(['name' => $value]);
 
-        if(is_null($categoryUpdate)) { // si pas de nom de categorie existant pour la valeur
-            $category = new Category(); // Creation d'une nouvelle categorie
-            $category->setName($value); // Assignation du nom a cette nouvelle categorie
+        /** Mets à jour les catégories qui n'existe pas */
+        if(is_null($categoryUpdate)) {
+            $category = new Category();
+            $category->setName($value);
 
-            // tells Doctrine you want to (eventually) save the Article (no queries yet)
+            /** persistance */
             $doctrine->persist($category);
-            // actually executes the queries (i.e. the INSERT query)
+            /** Insert */
             $doctrine->flush();
             return $category;
         }
