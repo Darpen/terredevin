@@ -8,11 +8,6 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- *
- * Description du Répository de l'Oenotourisme :
- *
- * Aucune méthode défini
- *
  * @method Evenement|null find($id, $lockMode = null, $lockVersion = null)
  * @method Evenement|null findOneBy(array $criteria, array $orderBy = null)
  * @method Evenement[]    findAll()
@@ -25,6 +20,11 @@ class EvenementRepository extends ServiceEntityRepository
      */
     private $entityManager;
 
+    /**
+     * EvenementRepository constructor.
+     * @param ManagerRegistry $registry
+     * @param EntityManagerInterface $entityManager
+     */
     public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager)
     {
         parent::__construct($registry, Evenement::class);
@@ -34,16 +34,20 @@ class EvenementRepository extends ServiceEntityRepository
     /**
      * @param $value
      * @return bool
+     *
+     * Description :
+     * Récupère tous les événements par leurs titre et mets à jour ceux qui n'éxiste pas
      */
-    public function findEvenementByTitle($value)
-    {
+    public function findEvenementByTitle($value){
 
         $doctrine = $this->entityManager;
 
+        /** Récupère tous les événements par leurs titre */
         $evenementUpdate = $doctrine
             ->getRepository(Evenement::class)
             ->findOneBy(['title' => $value]);
 
+        /** Mets à jour les événements qui n'existe pas */
         if (is_null($evenementUpdate)) {
             return False;
         }

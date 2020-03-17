@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class ArticleRepository extends ServiceEntityRepository
 {
+    /** @var EntityManagerInterface  */
     private $entityManager;
 
     public function __construct(ManagerRegistry $registry,EntityManagerInterface $entityManager)
@@ -26,16 +27,20 @@ class ArticleRepository extends ServiceEntityRepository
     /**
      * @param $value
      * @return bool
+     *
+     * Description :
+     * Récupère tous les articles par leurs id et return true si l'article n'existe pas
      */
-    public function findArticleByTitle($value)
-    {
+    public function findArticleByTitle($value){
 
         $doctrine = $this->entityManager;
 
+        /**  Récupére les articles par leur titre */
         $article = $doctrine
             ->getRepository(Article::class)
             ->findOneBy(['title' => $value]);
 
+        /** si l'article n'existe pas, retourne faux sinon vrai*/
         if (is_null($article)) {
             return False;
         }

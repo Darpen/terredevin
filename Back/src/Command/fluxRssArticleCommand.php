@@ -7,29 +7,29 @@ use App\Entity\Article;
 use App\Entity\Category;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use SimpleXMLElement;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use \Doctrine\ORM\EntityManager;
-use Doctrine\DBAL\Driver\Connection;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Validator\Constraints\DateTime;
+
 
 /**
  *
  * Description de la Command de fluxRssArticleCategory :
  *
- * Command qui gére la récupération du flux Rss des entity Article et Category.
+ * Command qui gère la récupération du flux Rss des entity Article et Category.
  *
  * Class fluxRssArticleCategoryCommand
  * @package App\Command
  */
 class fluxRssArticleCommand extends Command
 {
-
+    /**
+     *
+     * Variable défini pour l'appel de la command
+     *
+     * @var string
+     */
     protected static $defaultName = 'app:rssArticleCategory';
 
     /**
@@ -67,15 +67,21 @@ class fluxRssArticleCommand extends Command
         $urlHome = "https://www.terredevins.com/feed";
         /** Déclaration d'unenouvelle instance de la classe SimpleXMLElement */
         $xmlHome = new SimpleXMLElement($urlHome, null, true);
-        /**  */
+        /** Retourne les espaces de noms utilisés dans le document */
         $nsHome = $xmlHome->getNamespaces(true);
-        /** Déclaration de l'entityManager */
+        /** Convertit  fichier XML en objet */
         $fluxRssHome = simplexml_load_file($urlHome);
-        /** Déclaration de l'entityManager */
+        /** Déclaration d'une variable pour le chemin du flux Rss' */
         $itemsHome = $fluxRssHome->channel->item;
 
+        /**
+         * Boucle permettant de récupérés chaques items dans la variable
+         */
         foreach($itemsHome as $item ) {
 
+            /**
+             * Déclaration de chaques objets
+             */
             $title = $item->title;
             $link = $item->link;
             $comments = $item->comments;
@@ -83,6 +89,10 @@ class fluxRssArticleCommand extends Command
             $pubDateFinal = date('Y-m-d', strtotime($pubDate));
             $dc = $item->children($nsHome['dc']);
             $categories = array();
+
+            /**
+             * Boucle permettant de récupérés chaques Category
+             */
             foreach ($item->category as $category) {
                 $categories[] = $doctrine
                     ->getRepository(Category::class)
@@ -94,17 +104,30 @@ class fluxRssArticleCommand extends Command
             $wfw = $item->children($nsHome['wfw']);
             $slash = $item->children($nsHome['slash']);
 
+            /**
+             * Variable permettant de voir si l'article existe ou pas.
+             * retourne un booleen
+             */
             $articleUpdate = $doctrine
                 ->getRepository(Article::class)
                 ->findArticleByTitle($title->__toString());
 
+            /**
+             * Insert les articles non existants
+             */
             if (($articleUpdate === False)) {
 
+                /**
+                 * Nouvelle instance d'un Article
+                 */
                 $article = new Article();
+
+                /**
+                 * Ajout de chaque objet dans l'article
+                 */
                 foreach ($categories as $category) {
                     $article->addCategory($category);
                 }
-
                 $article->setTitle($title);
                 $article->setLink($link);
                 $article->setComments($comments);
@@ -116,17 +139,19 @@ class fluxRssArticleCommand extends Command
                 $article->setCommentRss($wfw);
                 $article->setCommentsSlash($slash);
 
-                // tells Doctrine you want to (eventually) save the Article (no queries yet)
+                /**
+                 * Persistence des données
+                 */
                 $doctrine->persist($category);
                 $doctrine->persist($article);
-                // actually executes the queries (i.e. the INSERT query)
+
+                /**
+                 * Envoi des données sur la Bdd
+                 */
                 $doctrine->flush();
-                $output->writeln('Récupération des Articles et leurs Categorys !');
+                $output->writeln('Récupération des Articles et leurs Categories !');
             }
         }
-
         return 0;
     }
-
-
 }

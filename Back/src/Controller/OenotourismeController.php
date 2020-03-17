@@ -2,79 +2,52 @@
 
 namespace App\Controller;
 
-use App\Entity\Article;
-use App\Entity\Category;
-use App\Entity\Evenement;
+
 use App\Entity\Oenotourisme;
-use SimpleXMLElement;
+use App\Repository\OenotourismeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Response;
 
 class OenotourismeController extends AbstractController
 {
 
     /**
-     * @Route("/AllOenotourisme", name="AllOenotourisme")
+     * @Route("/oenotourismes", name="evenements", methods={"GET"})
+     * @param OenotourismeRepository $oenotourismeRepository
+     * @return Response
+     *
+     * Description :
+     * Récupère tous les oenotourismes de la base de donnée pour les retourner sous forme de tableau d'objet au format json
      */
-
-    public function findAllOenotourisme()
+    public function findOenotourismes(OenotourismeRepository $oenotourismeRepository)
     {
 
-        $oenotourismes = $this->getDoctrine()
-            ->getRepository(Oenotourisme::class)
-            ->findAll();
+        $oenotourisme = $oenotourismeRepository->findAll();
+        /** organise les oenotourisme sous forme de tableau au format json */
+        $data = $this->get('serializer')->serialize($oenotourisme, 'json',['groups' => ['evenement']]);
 
-        if (!$oenotourismes) {
-            // cause the 404 page not found to be displayed
-            throw $this->createNotFoundException();
-        }
+        $response = new Response($data);
+        /** precise dans le header le format "json" */
+        $response->headers->set('Content-Type', 'application/json');
 
-        return $this->render('rss/Oenotourisme/Oenotourismes.html.twig', array(
-            'oenotourismes' => $oenotourismes
-        ));
+        return $response;
     }
 
     /**
-     * @Route("/Oenotourisme/{$title}", name="Oenotourisme")
-     * @param $title
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/oenotourisme/{id}", name="oenotourisme", methods={"GET"})
+     * @param Oenotourisme $oenotourisme
+     * @return Response
+     *
+     * Description :
+     * Recupere un oenotourisme avec son id  et retourne un objet json
      */
-    public function findOneOenotourisme($title)
+    public function findOneOenotourisme(Oenotourisme $oenotourisme)
     {
+        $data = $this->get('serializer')->serialize($oenotourisme, 'json',['groups' => ['oenotourisme']]);
 
-        $oenotourismes = $this->getDoctrine()
-            ->getRepository(Oenotourisme::class)
-            ->findoneBy(array('title'=>$title));
+        $response = new Response($data);
+        $response->headers->set('Content-Type', 'application/json');
 
-        if (!$oenotourismes) {
-            // cause the 404 page not found to be displayed
-            throw $this->createNotFoundException();
-        }
-
-        return $this->render('rss/Oenotourisme/Oenotourisme.html.twig', array(
-            'oenotourismes' => $oenotourismes
-        ));
+        return $response;
     }
-
-/*
-    public function rss()
-    {
-        $rss = new DOMDocument();
-        $rss->load('https://www.terredevins.com/feed');
-        $encoded = array();
-        $limit=50;
-        foreach ($rss->getElementsByTagName('encoded') as $node)
-        {
-            $item = $node->getElementsByTagName('img')->item(0)->value;
-            array_push($encoded, $item);
-        }
-        for($x=0;$x<$limit;$x++) {
-            echo 'IMG -> '.$encoded[$x].'</br></br>';
-        }
-        return $this->render('rss/rss.html.twig', array(
-            'rss' => $rss->channel->item,
-        ));
-    }
-    */
 }
