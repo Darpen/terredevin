@@ -19,14 +19,23 @@ use Symfony\Component\Validator\Constraints\DateTime;
 
 class fluxRssOenotourismeCommand extends Command
 {
-
+    /**
+     *
+     * Variable défini pour l'appel de la command
+     *
+     * @var string
+     */
     protected static $defaultName = 'app:rssOenotourisme';
 
-
-    // ...
-    // ...
+    /**
+     * @var EntityManagerInterface
+     */
     private $entityManager;
 
+    /**
+     * fluxRssOenotourismeCommand constructor.
+     * @param EntityManagerInterface $entityManager
+     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         parent::__construct();
@@ -35,8 +44,9 @@ class fluxRssOenotourismeCommand extends Command
 
 
     /**
-     * @CronJob("*\/5 * * * *")
-     * Will be executed every 5 minutes
+     *
+     * Fonction d'éxecution de la command pour la récupération du FluxRss concernant Article et Category.
+     *
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return
@@ -46,28 +56,27 @@ class fluxRssOenotourismeCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
 
-        /***
-         * Partie Suppression des données
-         *
-         *
-        $doctrineTruncate = $this->entityManager->getConnection();
-        $platform   = $doctrineTruncate->getDatabasePlatform();
-        $doctrineTruncate->executeUpdate($platform->getTruncateTableSQL('article', true ));
-        $doctrineTruncate->executeUpdate($platform->getTruncateTableSQL('evenement', true ));
-        ***/
-
+        /** Déclaration de l'entityManager */
         $doctrine = $this->entityManager;
-
-        // Partie Oenotourisme
-
+        /** L'url du flux Rss */
         $urlOenotourisme = "https://www.terredevins.com/oenotourisme/feed";
+        /** Déclaration d'unenouvelle instance de la classe SimpleXMLElement */
         $xmlOenotourisme = new SimpleXMLElement($urlOenotourisme, null, true);
+        /** Retourne les espaces de noms utilisés dans le document */
         $nsOenotourisme = $xmlOenotourisme->getNamespaces(true);
+        /** Convertit  fichier XML en objet */
         $fluxRssOenotourisme = simplexml_load_file($urlOenotourisme);
+        /** Déclaration d'une variable pour le chemin du flux Rss' */
         $itemsOenotourisme = $fluxRssOenotourisme->channel->item;
 
+        /**
+         * Boucle permettant de récupérés chaques items dans la variable
+         */
         foreach($itemsOenotourisme as $item ){
 
+            /**
+             * Déclaration de chaques objets
+             */
             $title = $item->title;
             $link = $item->link;
             $comments = $item->comments;
@@ -80,9 +89,14 @@ class fluxRssOenotourismeCommand extends Command
             $wfw = $item->children($nsOenotourisme['wfw']);
             $slash = $item->children($nsOenotourisme['slash']);
 
-
+            /**
+             * Nouvelle instance d'un Oenotourisme
+             */
             $oenotourisme = new Oenotourisme();
 
+            /**
+             * Ajout de chaque objet dans l'Oenotourisme
+             */
             $oenotourisme->setTitle($title);
             $oenotourisme->setLink($link);
             $oenotourisme->setComments($comments);
@@ -94,9 +108,14 @@ class fluxRssOenotourismeCommand extends Command
             $oenotourisme->setCommentRss($wfw);
             $oenotourisme->setCommentsSlash($slash);
 
-            // tells Doctrine you want to (eventually) save the Article (no queries yet)
+            /**
+             * Persistence des données
+             */
             $doctrine->persist($oenotourisme);
-            // actually executes the queries (i.e. the INSERT query)
+
+            /**
+             * Envoi des données sur la Bdd
+             */
             $doctrine->flush();
             $output->writeln('Récupération des Oenotourisme !');
 
