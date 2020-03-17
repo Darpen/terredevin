@@ -8,6 +8,10 @@ use App\Repository\OenotourismeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class OenotourismeController
+ * @package App\Controller
+ */
 class OenotourismeController extends AbstractController
 {
 

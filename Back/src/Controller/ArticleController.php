@@ -10,6 +10,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class ArticleController
+ * @package App\Controller
+ */
 class ArticleController extends AbstractController
 {
     /** @var EntityManagerInterface */
@@ -21,7 +25,7 @@ class ArticleController extends AbstractController
     }
 
     /**
-     * @Route("/articles", name="articles", methods={"GET"})
+     * @Route("/articles/{indice}", name="articles", methods={"GET"})
      * @param ArticleRepository $articleRepository
      * @return Response
      *
