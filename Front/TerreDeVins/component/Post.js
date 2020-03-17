@@ -1,11 +1,15 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 
 class Post extends React.Component{
 
     render(){
         return(
-            <View key = { this.props.post.id } style = { styles.container }>
+            <TouchableOpacity 
+                key = { this.props.post.id } 
+                style = { styles.container }
+                onPress = { () => {this.props.navigation('DisplayPost') }}
+            >
                 <View style = { styles.picture }>
                     <Image 
                         style = { styles.picture }
@@ -19,7 +23,7 @@ class Post extends React.Component{
                         <Text style = {styles.category_name}>{ this.props.post.categories[1].name }</Text>
                     </View>
                 </View>
-            </View>
+            </TouchableOpacity>
         );
     }
 }
@@ -43,11 +47,15 @@ const styles = StyleSheet.create({
     texts:{
         flexShrink: 1,
         justifyContent: 'space-between',
+        alignItems: 'flex-end',
+        // borderColor: 'red',
+        // borderWidth: 1
     },
     title:{
         flexShrink: 1,
         fontSize: 18,
         marginHorizontal: 4,
+        textAlign: 'right',
     },
     vline:{
         width: 2,
