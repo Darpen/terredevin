@@ -8,11 +8,6 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- *
- * Description du Répository de l'Oenotourisme :
- *
- * Aucune méthode défini
- *
  * @method Evenement|null find($id, $lockMode = null, $lockVersion = null)
  * @method Evenement|null findOneBy(array $criteria, array $orderBy = null)
  * @method Evenement[]    findAll()
@@ -27,24 +22,20 @@ class EvenementRepository extends ServiceEntityRepository
 
     public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager)
     {
-        parent::__construct($registry, Evenement::class);
-        $this->entityManager = $entityManager;
+        parent::__construct($registry, Evenement::class); // recupere le __construct parent
+        $this->entityManager = $entityManager; // creer une entite pour se connecter a la base
     }
 
-    /**
-     * @param $value
-     * @return bool
-     */
     public function findEvenementByTitle($value)
-    {
+    {// Trouver un evenement par son titre ($value)
 
-        $doctrine = $this->entityManager;
+        $doctrine = $this->entityManager; // pour se connecter a doctrine
 
         $evenementUpdate = $doctrine
-            ->getRepository(Evenement::class)
-            ->findOneBy(['title' => $value]);
+            ->getRepository(Evenement::class) // Verifie si l'article existe deja
+            ->findOneBy(['title' => $value]); // Trouver 1 article pour titre=$value
 
-        if (is_null($evenementUpdate)) {
+        if (is_null($evenementUpdate)) { // si pas de titre pour la valeur, return faux
             return False;
         }
         else{

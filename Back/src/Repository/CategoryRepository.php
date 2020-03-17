@@ -20,26 +20,22 @@ class CategoryRepository extends ServiceEntityRepository
 
     public function __construct(ManagerRegistry $registry,EntityManagerInterface $entityManager)
     {
-        parent::__construct($registry, Category::class);
-        $this->entityManager = $entityManager;
+        parent::__construct($registry, Category::class); // recupere le __construct parent 
+        $this->entityManager = $entityManager; // creer une entite pour se connecter a la base
     }
 
-    /**
-     * @param $value
-     * @return Category|object|null
-     */
     public function findCategoryByName($value)
-    {
+    {// Trouver une categorie par son nom ($value)
 
-        $doctrine = $this->entityManager;
+        $doctrine = $this->entityManager; // pour se connecter a doctrine
 
            $categoryUpdate = $doctrine
-               ->getRepository(Category::class)
-               ->findOneBy(['name' => $value]);
+               ->getRepository(Category::class) // Verifie si la categorie existe deja
+               ->findOneBy(['name' => $value]); // Trouver 1 categorie a nom=$value
 
-        if(is_null($categoryUpdate)) {
-            $category = new Category();
-            $category->setName($value);
+        if(is_null($categoryUpdate)) { // si pas de nom de categorie existant pour la valeur
+            $category = new Category(); // Creation d'une nouvelle categorie
+            $category->setName($value); // Assignation du nom a cette nouvelle categorie
 
             // tells Doctrine you want to (eventually) save the Article (no queries yet)
             $doctrine->persist($category);
