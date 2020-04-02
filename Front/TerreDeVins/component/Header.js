@@ -33,7 +33,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         zIndex : 999,
-        marginTop: 34,
         // borderColor: 'blue',
         // borderWidth: 1,
     },

@@ -8,7 +8,7 @@ class Post extends React.Component{
             <TouchableOpacity 
                 key = { this.props.post.id } 
                 style = { styles.container }
-                onPress = { () => {this.props.navigation('DisplayPost') }}
+                onPress = { () => {this.props.navigation('DisplayPost', this.props.post) }}
             >
                 <View style = { styles.picture }>
                     <Image 
