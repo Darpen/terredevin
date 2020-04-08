@@ -1,19 +1,32 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { View, StatusBar } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import Home from './screens/Home';
+import Favoris from './screens/Favoris';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-    </View>
-  );
+const Drawer = createDrawerNavigator();
+
+export default class App extends React.Component {
+  render(){
+    return (
+      <View style={{flex:1}}>
+        <StatusBar hidden={true} />
+        <NavigationContainer>
+          <Drawer.Navigator
+            initialRouteName = 'Actualités'
+          >
+            <Drawer.Screen 
+              component={Home}
+              name='Actualités'
+            />
+            <Drawer.Screen 
+              component={Favoris}
+              name='Favoris'
+            />
+          </Drawer.Navigator>
+        </NavigationContainer>
+      </View>
+    );
+  }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
