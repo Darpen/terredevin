@@ -4,7 +4,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Home from './screens/Home';
 import Favoris from './screens/Favoris';
+import Evenements from './screens/Evenements';
 
+/*
+ * Construction du menu glissant (menu principal)
+ */
 const Drawer = createDrawerNavigator();
 
 export default class App extends React.Component {
@@ -23,6 +27,10 @@ export default class App extends React.Component {
             <Drawer.Screen 
               component={Favoris}
               name='Favoris'
+            />
+            <Drawer.Screen 
+              component={Evenements}
+              name='Evénements'
             />
           </Drawer.Navigator>
         </NavigationContainer>
