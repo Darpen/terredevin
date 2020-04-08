@@ -14,7 +14,7 @@ export default class Actualites extends React.Component{
     }
 
     componentDidMount(){
-        Axios.get(config.APIlink + '/articles')
+        Axios.get(config.APIlink + '/articles/5')
         .then(response => this.setState({articles:response.data}))
         .catch(error => console.log(error))
     }
