@@ -1,35 +1,60 @@
 import React from 'react'
 import config from '../config'
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, ScrollView } from 'react-native'
 import Axios from 'axios'
+import { AppLoading } from 'expo'
+import FirstPost from '../components/FirstPost'
+import Post from '../components/Post'
 
 export default class Actualites extends React.Component{
 
     constructor(props){
         super(props)
         this.state = {
-            articles: []
+            articles: [],
+            events: []
         }
     }
 
     componentDidMount(){
-        Axios.get(config.APIlink + '/articles/5')
-        .then(response => this.setState({articles:response.data}))
+        Axios.get(config.APIlink + '/articles/10')
+        .then(response => this.setState({articles:response.data.reverse()}))
         .catch(error => console.log(error))
     }
     
     render(){
-        return(
-            <View>
-                <Text style={style.text}>Page Actualités</Text>
-            </View>
-        )
+        console.log(this.state.events)
+        if(this.state.articles !== []){
+            return(
+                <ScrollView style={style.container}>
+                    {this.state.articles.map((article, index) => (
+                        index === 0 ? (
+                            <FirstPost 
+                                key = {index}
+                                article = {article}
+                            />
+                        ) : (
+                            <Post 
+                                key = {index}
+                                article = {article}
+                            />
+                        )
+                    ))}
+                </ScrollView>
+            )
+        } else {
+            return <></>
+        }
     } 
 }
 
 const style = StyleSheet.create({
+    container:{
+        backgroundColor: '#FFFFFF'
+    },
     text:{
-        fontFamily: 'Sen-Bold',
-        fontSize: 25
+        fontFamily: 'Sen-Regular',
+        fontSize: 18,
+        color: '#404040'
     }
 })
