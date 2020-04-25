@@ -1,8 +1,7 @@
-import React from 'react';
-import config from '../config';
-import { Text } from 'react-native';
-import Axios from 'axios';
-import { ScrollView } from 'react-native-gesture-handler';
+import React from 'react'
+import config from '../config'
+import { StyleSheet, View, Text } from 'react-native'
+import Axios from 'axios'
 
 export default class Actualites extends React.Component{
 
@@ -19,13 +18,18 @@ export default class Actualites extends React.Component{
         .catch(error => console.log(error))
     }
     
-
     render(){
         return(
-            <ScrollView>
-                {this.state.articles.map(article => <Text>{article.title}</Text>)}
-            </ScrollView>
+            <View>
+                <Text style={style.text}>Page Actualités</Text>
+            </View>
         )
-    }
-    
+    } 
 }
+
+const style = StyleSheet.create({
+    text:{
+        fontFamily: 'Sen-Bold',
+        fontSize: 25
+    }
+})
