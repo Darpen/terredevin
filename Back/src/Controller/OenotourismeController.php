@@ -17,7 +17,7 @@ class OenotourismeController extends AbstractController
 {
 
     /**
-     * @Route("/oenotourismes", name="evenements", methods={"GET"})
+     * @Route("/oenotourismes", name="oenotourismes", methods={"GET"})
      * @param OenotourismeRepository $oenotourismeRepository
      * @return Response
      *
@@ -29,7 +29,7 @@ class OenotourismeController extends AbstractController
 
         $oenotourisme = $oenotourismeRepository->findAll();
         /** organise les oenotourisme sous forme de tableau au format json */
-        $data = $this->get('serializer')->serialize($oenotourisme, 'json',['groups' => ['evenement']]);
+        $data = $this->get('serializer')->serialize($oenotourisme, 'json',['groups' => ['oenotourismes']]);
 
         $response = new Response($data);
         /** precise dans le header le format "json" */
