@@ -16,7 +16,7 @@ export default function FirstPost(props){
     return(
         <View style={style.container}>
             <View style={style.line}></View>
-            <TouchableOpacity style={style.post}>
+            <TouchableOpacity>
                 <Image 
                     style={style.picture}
                     source={{uri: source}}
@@ -33,9 +33,7 @@ export default function FirstPost(props){
 const style = StyleSheet.create({
     container:{
         maxWidth: '100%',
-        height: 300,
         marginHorizontal: 16,
-        alignItems: 'center'
     },
     line:{
         width: '90%',
@@ -44,13 +42,12 @@ const style = StyleSheet.create({
         opacity: .2,
         marginVertical: 10,
     },
-    post:{
-        maxWidth: '100%',
-    },    
     picture:{
-        flex: 1,
+        width: '100%',
+        height: 178,
     },
     text:{
+        marginTop: 10,
         flexShrink: 1,
     },
     title:{
@@ -63,6 +60,7 @@ const style = StyleSheet.create({
         fontFamily: 'Sen-Regular',
         fontSize: 12,
         color: '#404040',
-        textTransform: 'capitalize'
+        textTransform: 'capitalize',
+        marginTop: 10,
     }
 })

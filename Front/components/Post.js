@@ -20,7 +20,10 @@ export default function Post(props){
     return(
         <View style={style.container}>
             <View style={style.line}></View>
-            <TouchableOpacity style={style.post}>
+            <TouchableOpacity 
+                style={style.post}
+                onPress={() => props.onPress(props.article)}
+            >
                 <Image 
                     style={style.picture}
                     source={{uri: source}}
@@ -38,7 +41,7 @@ const style = StyleSheet.create({
     container:{
         maxWidth: '100%',
         marginHorizontal: 16,
-        alignItems: 'center'
+        alignItems: 'center',
     },
     line:{
         width: '90%',

@@ -44,6 +44,8 @@ export default class App extends React.Component {
           <NavigationContainer>
             <Drawer.Navigator
               initialRouteName = 'Actualités'
+              drawerPosition = 'left'
+              hideStatusBar = {true}
             >
               <Drawer.Screen 
                 component={Home}

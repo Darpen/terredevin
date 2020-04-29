@@ -1,7 +1,8 @@
-import React from 'react';
-import { View, StatusBar } from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
-import Actualites from './Actualites';
+import React from 'react'
+import { View, StatusBar } from 'react-native'
+import { createStackNavigator } from '@react-navigation/stack'
+import Actualites from './Actualites'
+import Article from './Article'
 
 /*
  * Construction de la navigation
@@ -21,6 +22,10 @@ export default function Home(){
                 <Stack.Screen 
                     component={Actualites}
                     name="Actualités"
+                />
+                <Stack.Screen 
+                    component={Article}
+                    name="Article"
                 />
             </Stack.Navigator>
         </View>

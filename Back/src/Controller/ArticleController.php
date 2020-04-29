@@ -26,6 +26,28 @@ class ArticleController extends AbstractController
     }
 
     /**
+     * @Route("/allarticles", name="allarticles", methods={"GET"})
+     * @param ArticleRepository $articleRepository
+     * @return Response
+     *
+     * Description :
+     * Récupère tous les articles de la base de donnée pour les retourner sous forme de tableau d'objet au format json
+     */
+    public function findAllArticle(ArticleRepository $articleRepository)
+    {
+
+        $articles = $articleRepository->findAll();
+        /** organise les articles sous forme de tableau au format json */
+        $data = $this->get('serializer')->serialize($articles, 'json',['groups' => ['article']]);
+
+        $response = new Response($data);
+        /** precise dans le header le format "json" */
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    /**
      * @Route("/articles/{indice}", name="articles", methods={"GET"})
      * @param ArticleRepository $articleRepository
      * @return Response
@@ -33,7 +55,7 @@ class ArticleController extends AbstractController
      * Description :
      * Récupère tous les articles de la base de donnée pour les retourner sous forme de tableau d'objet au format json
      */
-    public function findAllArticle(ArticleRepository $articleRepository,$indice)
+    public function findArticles(ArticleRepository $articleRepository,$indice)
     {
 
         $articles = $articleRepository->findBy(array(), array('id' => 'DESC'), $indice);

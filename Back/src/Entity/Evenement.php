@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EvenementRepository")
@@ -77,6 +78,43 @@ class Evenement
      * @Groups("evenement")
      */
     private $commentsSlash;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups("evenement")
+     */
+
+    private $startdate;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups("evenement")
+     */
+
+    private $enddate;
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups("evenement")
+     */
+    private $location;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups("evenement")
+     */
+    private $adress;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups("evenement")
+     */
+    private $zip;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("evenement")
+     */
+    private $city;
 
     public function getId(): ?int
     {
@@ -202,4 +240,101 @@ class Evenement
 
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getStartdate()
+    {
+        return $this->startdate;
+    }
+
+    /**
+     * @param mixed $startdate
+     */
+    public function setStartdate($startdate): void
+    {
+        $this->startdate = $startdate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEnddate()
+    {
+        return $this->enddate;
+    }
+
+    /**
+     * @param mixed $enddate
+     */
+    public function setEnddate($enddate): void
+    {
+        $this->enddate = $enddate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLocation()
+    {
+        return $this->location;
+    }
+
+    /**
+     * @param mixed $location
+     */
+    public function setLocation($location): void
+    {
+        $this->location = $location;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAdress()
+    {
+        return $this->adress;
+    }
+
+    /**
+     * @param mixed $adress
+     */
+    public function setAdress($adress): void
+    {
+        $this->adress = $adress;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getZip()
+    {
+        return $this->zip;
+    }
+
+    /**
+     * @param mixed $zip
+     */
+    public function setZip($zip): void
+    {
+        $this->zip = $zip;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCity()
+    {
+        return $this->city;
+    }
+
+    /**
+     * @param mixed $city
+     */
+    public function setCity($city): void
+    {
+        $this->city = $city;
+    }
+
 }
