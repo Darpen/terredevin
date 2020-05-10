@@ -1,10 +1,12 @@
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Image, StyleSheet } from 'react-native'
 
 export default function Splash(){
     return(
-        <View>
-            <Text>Terre de Vins</Text>
+        <View style={style.container}>
+            <Image 
+                source={require('../images/logo.png')}
+            />
         </View>
     )
 }
@@ -13,6 +15,7 @@ const style = StyleSheet.create({
     container:{
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: "#FFFFFF"
     }
 })

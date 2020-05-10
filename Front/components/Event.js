@@ -4,7 +4,9 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { LinearGradient } from 'expo-linear-gradient'
 
 /**
- * PROPS : event : object
+ * PROPS : 
+ *  event (object)
+ *  onPress (function)
  */
 
 const {width} = Dimensions.get('screen')
@@ -17,7 +19,7 @@ export default function Event(props){
 
 
     return(
-        <TouchableOpacity style={style.container}>
+        <TouchableOpacity style={style.container} onPress={() => props.onPress(props.event, source)}>
             <Image 
                 source={{uri: source}}
                 style={style.picture}

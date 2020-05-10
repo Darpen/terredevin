@@ -4,9 +4,18 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import * as Font from 'expo-font'
 import { AppLoading } from 'expo'
-import Home from './screens/Home';
-import Favoris from './screens/Favoris';
+
+//Imports Redux
+import { Provider } from 'react-redux'
+import Store from './store/configureStore'
+import { persistStore } from 'redux-persist'
+import { PersistGate } from 'redux-persist/integration/react';
+
+
+import Home from './stacks/Home';
+import FavoritesStack from './stacks/FavoritesStack';
 import Evenements from './screens/Evenements';
+
 
 /**
  * Déclaration des custom fonts
@@ -38,29 +47,39 @@ export default class App extends React.Component {
 
   render(){
     if (this.state.fontsLoaded) {
+      let persistor = persistStore(Store)
       return (
+
         <View style={{flex:1}}>
+          
           <StatusBar hidden={true} />
-          <NavigationContainer>
-            <Drawer.Navigator
-              initialRouteName = 'Actualités'
-              drawerPosition = 'left'
-              hideStatusBar = {true}
-            >
-              <Drawer.Screen 
-                component={Home}
-                name='Actualités'
-              />
-              <Drawer.Screen 
-                component={Favoris}
-                name='Favoris'
-              />
-              <Drawer.Screen 
-                component={Evenements}
-                name='Evénements'
-              />
-            </Drawer.Navigator>
-          </NavigationContainer>
+          
+          <Provider store={Store}>
+            <PersistGate persistor={persistor}>
+              <NavigationContainer>
+                <Drawer.Navigator
+                  initialRouteName = 'Actualités'
+                  drawerPosition = 'right'
+                  hideStatusBar = {true}
+                  statusBarAnimation='none'
+                >
+                  <Drawer.Screen 
+                    component={Home}
+                    name='Actualités'
+                  />
+                  <Drawer.Screen 
+                    component={FavoritesStack}
+                    name='Favoris'
+                  />
+                  <Drawer.Screen 
+                    component={Evenements}
+                    name='Evénements'
+                  />
+                </Drawer.Navigator>
+              </NavigationContainer>
+            </PersistGate>
+          </Provider>
+
         </View>
       )
     } else {

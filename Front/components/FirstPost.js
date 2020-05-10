@@ -16,7 +16,9 @@ export default function FirstPost(props){
     return(
         <View style={style.container}>
             <View style={style.line}></View>
-            <TouchableOpacity>
+            <TouchableOpacity
+                onPress={() => props.onPress(props.article)}
+            >
                 <Image 
                     style={style.picture}
                     source={{uri: source}}

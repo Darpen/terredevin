@@ -1,3 +1,17 @@
 export default {
-    APIlink: "http://8f02b1a6.ngrok.io"
+    APIlink: "http://f58df829.ngrok.io",
+    months: [
+        'janvier',
+        'février',
+        'mars',
+        'avril',
+        'mai',
+        'juin',
+        'juillet',
+        'août',
+        'septembre',
+        'octobre',
+        'novembre',
+        'décembre'
+    ]
 }
