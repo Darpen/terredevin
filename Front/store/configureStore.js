@@ -11,4 +11,4 @@ const persistConfig = {
     storage: ExpoFileSystemStorage
 }
 
-export default createStore(persistCombineReducers(persistConfig, {favoritesReducer, contentReducer}));
+export default createStore(persistCombineReducers(persistConfig, {contentReducer, favoritesReducer}));

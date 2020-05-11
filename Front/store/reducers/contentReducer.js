@@ -15,30 +15,29 @@ const initialState = {
  
 function handleContent(state = initialState, action){
         let nextState //Déclaration de la variable qui représente la modification du state initial
-        switch (action.type){
-            
-            case 'UPDATE_CONTENT':
-            if(state.event != action.value.events || state.posts != action.value.posts){
-                if(state.posts != action.value.posts){
-
+        switch (action.type){            
+            case 'UPDATE_POSTS':
+                if(state.posts[0] !== action.value.data[0]){
                     nextState = {
                         ...state,
-                        posts: action.value.posts
+                        posts: action.value.data
                     }
                 }
-                if(state.event != action.value.events){
-
+                return nextState || state
+                break
+    
+            case 'UPDATE_EVENTS':
+                if(state.events[0] !== action.value.data[0]){
                     nextState = {
                         ...state,
-                        events: action.value.events
+                        events: action.value.data
                     }
                 }
-            }
-            return nextState || state
-
+                return nextState || state
+                break
             default:
                 return state // Si pas de changement détecté, on retourn le state initial
-        }
+        }   
 }
 
 export default handleContent

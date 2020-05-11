@@ -8,16 +8,19 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
  */
 
 export default function FavoritesPost(props){
-    //Récupération du champs 'Description' de l'article
-    const description = props.post.description.split('>') 
-    //Récupération de la balise image dans la description
-    const image = description[1].split(' ')[3]
     //Récupération de l'url de la source
-    const source = image.split('"')[1]
+    const source = props.post.description.split('>')[1].split(' ')[3].split('"')[1]
+
+    function titleTroncate(title){
+        if(title.length > 50){
+            title = title.substring(0,50) + '...'
+        }
+        return title
+    }
     
     return(
         <View style={style.container}>
-            <View style={style.line}></View>
+
             <TouchableOpacity 
                 style={style.post}
                 onPress={() => props.onPress(props.post)}
@@ -26,69 +29,58 @@ export default function FavoritesPost(props){
                     style={style.picture}
                     source={{uri: source}}
                 />
-                <View style={style.text}>
-                    <Text style={style.title}>{props.post.title}</Text>
-                    <TouchableOpacity 
-                        style={style.delete}
-                        onPress={() => props.toogleFavorite(props.post.id, props.post)}
-                    >
-                        <Image 
-                            source={require('../images/trash.png')}
-                        />
-                        <Text style={style.deleteText}>Supprimer</Text>
-                    </TouchableOpacity>
-                    
-                </View>
+                <Text style={style.title}>{titleTroncate(props.post.title)}</Text>                    
             </TouchableOpacity>
+
+            <TouchableOpacity 
+                style={style.delete}
+                onPress={() => props.toogleFavorite(props.post.id, props.post)}
+            >
+                <Image 
+                    source={require('../images/trash.png')}
+                    style={style.trash}
+                />
+            </TouchableOpacity>
+
         </View>
     )
 }
 
 const style = StyleSheet.create({
     container:{
-        maxWidth: '100%',
-        marginHorizontal: 16,
-        alignItems: 'center',
-    },
-    line:{
-        width: '90%',
-        height: .5,
-        backgroundColor: '#44355B',
-        opacity: .2,
-        marginVertical: 10,
+        maxWidth: "90%",
+        height: 130,
+        marginVertical: 7.5,
+        backgroundColor: "#FFFFFF",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
     },
     post:{
-        maxWidth: '100%',
-        padding: 15,
-        flexDirection: 'row',
-        backgroundColor: "#FFFFFF"
-    },    
+        maxWidth: "90%",
+        flexDirection: "row",
+        flexShrink: 1,
+        
+    },
     picture:{
         width: 100,
         height: 100,
-        marginRight: 15
-    },
-    text:{
-        flexShrink: 1,
+        marginHorizontal: 15,
     },
     title:{
-        flex: 1,
-        fontFamily: 'Sen-Regular',
-        fontSize: 18,
-        color: '#404040',
-        textAlign: 'right'
+        fontFamily: "Sen-Bold",
+        fontSize: 16,
+        flexShrink: 1,
     },
     delete:{
-        flexDirection: "row",
+        width: 44,
+        height: "100%",
+        backgroundColor: "#5A2A75",
+        justifyContent: "center",
         alignItems: "center",
-        justifyContent: "flex-end",
     },
-    deleteText:{
-        fontFamily: 'Sen-Regular',
-        fontSize: 12,
-        color: '#404040',
-        textAlign: 'right',
-        textTransform: 'uppercase',
-        paddingLeft: 10,
+    trash:{
+        width: 20,
+        height: 20,
     }
 })

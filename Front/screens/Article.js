@@ -96,8 +96,14 @@ function Article(props){
             {content.map((p, index) => (<HTMLView style={style.content} stylesheet={htmlstyles} key={index} value={p}/>))}
 
             {/* AUTHOR */}
-            <View>
-                <Text>{article.creator}</Text>
+            <View style={style.author}>
+                <View>
+                    <Image 
+                        source={require('../images/author.png')}
+                    />
+                    <Text style={style.authorText}>Auteur</Text>
+                </View>
+                <Text style={style.authorName}>{article.creator}</Text>
             </View>            
         </ScrollView>
     )
@@ -108,10 +114,13 @@ export default connect(mapStateToProps)(Article)
 const htmlstyles = StyleSheet.create({
     strong:{
         fontFamily: 'Sen-Bold',
+        fontSize: 16,
+        color: "#404040"
     },
     p:{
         fontFamily: 'Sen-Regular',
         fontSize: 16,
+        color: "#404040"
     },
     a:{
         fontFamily: 'Sen-Bold',
@@ -177,5 +186,22 @@ const style = StyleSheet.create({
     content:{
         paddingHorizontal: 15,
         paddingVertical: 8,
-    }
+    },
+    author:{
+        flexDirection: "row",
+        marginHorizontal: 15,
+        marginBottom: 30,
+    },
+    authorText:{
+        fontFamily: "Sen-Regular",
+        fontSize: 10,
+        color: "#404040",
+        textAlign: "center",
+        marginTop: 4,
+    },
+    authorName:{
+        fontFamily: "Sen-Regular",
+        fontSize: 12,
+        color: "#404040"
+    },
 })

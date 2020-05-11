@@ -63,8 +63,9 @@ export default connect(mapStateToProps)(Favorites)
 const style = StyleSheet.create({
     container:{
         flex: 1,
-        backgroundColor: "#404040",
+        backgroundColor: "#606060",
         alignItems: "center",
+        paddingTop: 7.5,
     },
     empty:{
         flex: 1,
