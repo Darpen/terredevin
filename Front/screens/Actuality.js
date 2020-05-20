@@ -14,7 +14,7 @@ let mapStateToProps = (state) => {
 
 class Actuality extends React.Component{
 
-    // Envoi des données vers le store Redux
+    // Envoi des données Posts vers le store Redux
     tooglePosts = (data) => {
         const action = {
             type: "UPDATE_POSTS",
@@ -25,10 +25,21 @@ class Actuality extends React.Component{
         this.props.dispatch(action)
     }
 
-    // Envoi des données vers le store Redux
+    // Envoi des données Events vers le store Redux
     toogleEvents = (data) => {
         const action = {
             type: "UPDATE_EVENTS",
+            value: {
+                data: data
+            }
+        }
+        this.props.dispatch(action)
+    }
+
+    // Envoi des données Degustations vers le store Redux
+    toogleDegustations = (data) => {
+        const action = {
+            type: "UPDATE_DEGUSTATIONS",
             value: {
                 data: data
             }
@@ -71,16 +82,6 @@ class Actuality extends React.Component{
             return nextEvents
         }
     }
-
-    // componentDidMount(){
-    //     Axios.get(URL + '/articles/20')
-    //     .then(response => this.tooglePosts(response.data))
-    //     .catch(error => console.log(error))
-
-    //     Axios.get(URL + '/evenements')
-    //     .then(response => this.toogleEvents(response.data))
-    //     .catch(error => console.log(error))
-    // }
 
     render(){
         return(

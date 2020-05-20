@@ -3,7 +3,6 @@ import { View, StatusBar, Dimensions } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack'
 import Burger from '../components/Burger'
 import Events from '../screens/Events'
-import EventPage from '../screens/EventDetails'
 
 const { width, height } = Dimensions.get("window")
 

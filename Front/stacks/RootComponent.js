@@ -9,15 +9,15 @@ import { createDrawerNavigator } from '@react-navigation/drawer'
 import { connect } from 'react-redux'
 
 // IMPORT DES COMPOSANTS
-import Home from './Home';
-import FavoritesStack from './FavoritesStack';
-import Evenements from './EventsStack';
-import Axios from 'axios';
-import Splash from '../screens/Splash';
+import Home from './Home'
+import FavoritesStack from './FavoritesStack'
+import EventsStack from './EventsStack'
+import DegustationStack from "./DegustationsStack"
+import Axios from 'axios'
+import Splash from '../screens/Splash'
 import CustomDrawerContent from '../components/CustomDrawer';
-import { useIsFocused, getActionFromState } from '@react-navigation/native';
 
-const URL = "http://feab4056.ngrok.io"
+const URL = "http://d13eef6d.ngrok.io"
 
 const mapStateToProps = (state) => {
     return {
@@ -40,7 +40,7 @@ class RootComponent extends React.Component {
             .then(response => state.posts = response.data)
             .catch(error => console.log(error))
     
-            Axios.get(URL + '/evenements')
+        Axios.get(URL + '/evenements')
             .then(response => state.events = response.data)
             .catch(error => console.log(error))
     }
@@ -148,8 +148,28 @@ class RootComponent extends React.Component {
                     />
 
                     <Drawer.Screen
-                        component={Evenements}
+                        component={EventsStack}
                         name='Evénements'
+                        options={{
+                            drawerIcon: ({ focused }) => (
+                                focused ? (
+                                    <Image
+                                    source={require('../images/icon-event-active.png')}
+                                    style={{width: 15, height: 20}}
+                                />
+                                ) : (
+                                <Image
+                                    source={require('../images/icon-event-inactive.png')}
+                                    style={{width: 15, height: 20}}
+                                        />
+                                )
+                            ) 
+                        }}
+                    />
+
+                    <Drawer.Screen
+                        component={DegustationStack}
+                        name='Dégustation'
                         options={{
                             drawerIcon: ({ focused }) => (
                                 focused ? (

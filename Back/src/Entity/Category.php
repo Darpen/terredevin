@@ -18,6 +18,7 @@ class Category
      * @ORM\Column(type="integer")
      * @Groups("article")
      * @Groups("category")
+     * @Groups("degustation")
      */
     private $id;
 
@@ -25,6 +26,7 @@ class Category
      * @ORM\Column(type="string", length=255)
      * @Groups("article")
      * @Groups("category")
+     * @Groups("degustation")
      */
     private $name;
 
@@ -33,10 +35,16 @@ class Category
      */
     private $articles;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Degustation", mappedBy="categories")
+     */
+    private $degustations;
+
 
     public function __construct()
     {
         $this->articles = new ArrayCollection();
+        $this->degustations = new ArrayCollection();
     }
 
 
@@ -90,6 +98,45 @@ class Category
         if ($this->articles->contains($article)) {
             $this->articles->removeElement($article);
             $article->removeCategory($this);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * @return Collection|Degustation[]
+     */
+    public function getDegustations(): Collection
+    {
+        return $this->degustations;
+    }
+
+    /**
+     * Set articles
+     *
+     * @param Degustation $degustations
+     */
+    public function setDegustations(Degustation $degustations)
+    {
+        $this->articles = $degustations;
+    }
+
+    public function addDegustation(Degustation $degustation): self
+    {
+        if (!$this->degustations->contains($degustation)) {
+            $this->degustations[] = $degustation;
+            $degustation->addCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDegustation(Degustation $degustation): self
+    {
+        if ($this->degustations->contains($degustation)) {
+            $this->degustations->removeElement($degustation);
+            $degustation->removeCategory($this);
         }
 
         return $this;

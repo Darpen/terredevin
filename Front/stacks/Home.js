@@ -5,6 +5,7 @@ import PostDetails from '../screens/PostDetails'
 import EventDetails from '../screens/EventDetails'
 import Burger from '../components/Burger'
 import Actuality from '../screens/Actuality'
+import DegustationContent from "../screens/DegustationContent"
 
 
 function setBurger(navigationProps){
@@ -73,6 +74,22 @@ export default function Home(props){
                 <Stack.Screen 
                 component={EventDetails}
                 name="Evenement"
+                options={{
+                    headerStyle:{
+                        height: height < 550 ? 66 : 88,
+                    },
+                    headerTitleStyle:{
+                        fontFamily: 'Sen-Bold',
+                        fontSize: width < 400 ? 20 : 25,
+                        color: '#5A2A75'
+                    },
+                    headerRight: () => setBurger(props.navigation)
+                }}
+                />
+
+                <Stack.Screen 
+                component={DegustationContent}
+                name="Dégustation"
                 options={{
                     headerStyle:{
                         height: height < 550 ? 66 : 88,
