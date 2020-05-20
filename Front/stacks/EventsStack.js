@@ -1,11 +1,13 @@
-import React from 'react'
-import { View, StatusBar, Dimensions, Image } from 'react-native'
+import React from 'react';
+import { View, StatusBar, Dimensions } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack'
-import PostDetails from '../screens/PostDetails'
-import EventDetails from '../screens/EventDetails'
 import Burger from '../components/Burger'
-import Actuality from '../screens/Actuality'
+import Events from '../screens/Events'
+import EventPage from '../screens/EventDetails'
 
+const { width, height } = Dimensions.get("window")
+
+const Stack = createStackNavigator()
 
 function setBurger(navigationProps){
     return (
@@ -15,49 +17,20 @@ function setBurger(navigationProps){
     )
 }
 
-function LogoTitle() {
-    return (
-        <Image
-            source={require('../images/logo.png')}
-            style={{width: 160, height: 40}}
-        />
-    )
-}
-
-const { width, height } = Dimensions.get("window")
-
-const Stack = createStackNavigator();
-
-export default function Home(props){
+export default function EventsStack(props){
     return(
         <View style={{flex:1}}>
-            <StatusBar hidden={true} />
+            <StatusBar hidden={true}/>
             <Stack.Navigator
             headerMode="float"
             screenOptions={{
                 headerTitleAlign: "center",
                 headerTintColor:'#5A2A75',
-            }}
+             }}
             >
                 <Stack.Screen 
-                component={Actuality}
-                name="Actualités"
-                options={{
-                    headerStyle:{
-                        height: height < 550 ? 66 : 88,
-                    },
-                    headerTitleStyle:{
-                        fontFamily: 'Sen-Bold',
-                        fontSize: width < 400 ? 20 : 25,
-                        color: '#5A2A75'
-                    },
-                    headerTitle: props => <LogoTitle {...props}/>,
-                    headerRight: () => setBurger(props.navigation)
-                }}
-                />
-                <Stack.Screen 
-                component={PostDetails}
-                name="Article"
+                component={Events}
+                name="Evénements"
                 options={{
                     headerStyle:{
                         height: height < 550 ? 66 : 88,
@@ -71,7 +44,7 @@ export default function Home(props){
                 }}
                 />
                 <Stack.Screen 
-                component={EventDetails}
+                component={Event}
                 name="Evenement"
                 options={{
                     headerStyle:{

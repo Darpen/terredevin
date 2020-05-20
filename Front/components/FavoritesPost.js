@@ -1,11 +1,13 @@
 import React from 'react'
-import { StyleSheet, Text, Image, View } from 'react-native'
+import { StyleSheet, Text, Image, View, Dimensions } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
 /**
  * PROPS : 
  *      article : object  
  */
+
+ const { width } = Dimensions.get('window')
 
 export default function FavoritesPost(props){
     //Récupération de l'url de la source
@@ -48,13 +50,12 @@ export default function FavoritesPost(props){
 
 const style = StyleSheet.create({
     container:{
-        maxWidth: "90%",
         height: 130,
         marginVertical: 7.5,
         backgroundColor: "#FFFFFF",
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "space-between",
+        justifyContent: "center",
     },
     post:{
         maxWidth: "90%",
@@ -69,7 +70,7 @@ const style = StyleSheet.create({
     },
     title:{
         fontFamily: "Sen-Bold",
-        fontSize: 16,
+        fontSize: (width < 400) ? 14 : 16,
         flexShrink: 1,
     },
     delete:{

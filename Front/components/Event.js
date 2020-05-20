@@ -1,85 +1,80 @@
 import React from 'react'
-import { StyleSheet, View, Image, Text, Dimensions } from 'react-native'
+import { Text, View, StyleSheet, Image, Dimensions } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { LinearGradient } from 'expo-linear-gradient'
 
-/**
- * PROPS : 
- *  event (object)
- *  onPress (function)
- */
-
-const {width} = Dimensions.get('screen')
+const { width } = Dimensions.get("window")
 
 export default function Event(props){
 
-    const source = props.event.description.split('<')[5].split(',')[1].split(' ')[1]
-    
-    const startDate = props.event.startdate.split('@')[0]
+    const source = props.event.description.split('<')[2].split('=')[3].split('"')[1]
 
+    function getDates() {
+        const startDate = props.event.startdate.split(" ")
+        const endDate = props.event.enddate.split(" ")
+        return (
+            "Du " +
+            startDate[1] + " " + startDate[0] +
+            " au " +
+            endDate[1] + " " + endDate[0]
+        )
+    }
+
+    function getTimes() {
+        const startDate = props.event.startdate.split(" ")
+        const endDate = props.event.enddate.split(" ")
+        return (
+            startDate[3] + "h" + startDate[5] +
+            "-" + endDate[3] + "h" + endDate[5]
+        )
+    }
+
+    console.log(props)
 
     return(
-        <TouchableOpacity style={style.container} onPress={() => props.onPress(props.event, source)}>
+        <TouchableOpacity
+        style={style.container}
+        onPress={() => props.onPress(props.event)}    
+        >
             <Image 
-                source={{uri: source}}
-                style={style.picture}
+            source={{uri: source}}
+            style={style.image}
             />
-            <LinearGradient
-                colors={['transparent' , 'rgba(0,0,0,0.7)']}
-                start={[0, 0]}
-                locations={[0, 0.4]}
-                style={style.linearGradient}
-            >
-                <View style={style.information}>
-                    <Text style={style.title}>{props.event.title}</Text>
-                    <View style={style.placeAndDate}>
-                        <Text style={style.place}>{props.event.city}</Text>
-                        <Text style={style.date}>{startDate}</Text>
-                    </View>
-                </View>
-            </LinearGradient>
+            <View style={style.texts}>
+                <Text style={style.title}>{props.event.title}</Text>
+                <Text style={style.date}>{getDates()}</Text>
+                <Text style={style.date}>{getTimes()}</Text>
+            </View>
         </TouchableOpacity>
     )
 }
 
 const style = StyleSheet.create({
     container:{
-        width: width,
-        position: 'relative',
+        backgroundColor: "#FFFFFF",
+        width: "100%",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        paddingHorizontal: 15,
+        paddingVertical: 5,
     },
-    picture:{
-        width: '100%',
-        height: 225,
-        backgroundColor: 'pink',
+    image:{
+        width: 100,
+        height: 100,
+        marginRight: 15,
     },
-    linearGradient:{
-        position: 'absolute',
-        bottom: 0,
+    title: {
+        fontFamily: 'Sen-Bold',
+        fontSize: width < 400 ? 13 : 15,
+        color: "#404040",
+        textAlign: "right",
     },
-    information:{
-        width: width,
-        padding: 8,
+    texts: {
+        flexShrink: 1,
     },
-    title:{
-        fontFamily: 'Sen-Regular',
-        fontSize: 18,
-        color: '#FFFFFF',
-    },
-    placeAndDate:{
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginVertical: 8
-    },
-    place:{
-        fontFamily: 'Sen-Regular',
-        fontSize: 12,
-        color: '#FFFFFF',
-        backgroundColor: '#B6A962',
-        padding: 2,
-    },
-    date:{
-        fontFamily: 'Sen-Regular',
-        fontSize: 12,
-        color: '#FFFFFF'
+    date: {
+        fontFamily: "Sen-Regular",
+        fontSize: 15,
+        color: "#7B7B7B",
+        textAlign: "right",
     }
 })

@@ -1,8 +1,9 @@
 import React from 'react'
-import { Text, View, StyleSheet, Image } from 'react-native';
+import { Text, View, StyleSheet, Image, ScrollView, Dimensions } from 'react-native';
 import {connect} from 'react-redux'
 import FavoritesPost from '../components/FavoritesPost'
 
+const {height} = Dimensions.get('window')
 
 const mapStateToProps = (state) => {
     return {
@@ -14,7 +15,10 @@ const mapStateToProps = (state) => {
 function Favorites(props){
 
     function goToArticle(post){
-        this.props.navigation.navigate('Article', {post:post})
+        props.navigation.navigate('Actualités', {
+            screen: "Article",
+            params:{post: post}
+        })
     }
 
     function toogleFavorite(post_id, post){
@@ -28,44 +32,43 @@ function Favorites(props){
         props.dispatch(action)
     }
 
-    return(
-        <View style={props.favoritesPosts.length != 0 ? style.container : style.empty}>
-            
-            {props.favoritesPosts.length != 0 ? (
-                <View>
-                    {props.favoritesPosts.map((post, index) => (
-                        <FavoritesPost 
-                            key={index}
-                            post={post}
-                            onPress={goToArticle}
-                            toogleFavorite={toogleFavorite}
-                        />
-                    ))}
-                </View>
-            ):(
-                <>
-                    <Text style={style.text}>Vous n'avez pas sauvegardé de favoris.</Text>
-                    <Text style={style.text}>Cliquez sur l'icône ci-dessous pour enregistrer vos articles préférés.</Text>
-                    <Text style={style.text}>Vous pourrez les consulter plus tard, même hors ligne</Text>
-                    <Image 
-                        source={require('../images/favoris.png')}
-                        style={style.image}
+    if(props.favoritesPosts.length != 0){
+        return(
+            <ScrollView contentContainerStyle={style.container}>
+                {props.favoritesPosts.map((post, index) => (
+                    <FavoritesPost 
+                        key={index}
+                        post={post}
+                        onPress={goToArticle}
+                        toogleFavorite={toogleFavorite}
                     />
-                </>
-            )}
-            
-        </View>
-    )
+                ))}
+            </ScrollView>
+        )
+    } else {
+        return(
+            <View style={style.empty}>
+                <Text style={style.text}>Vous n'avez pas sauvegardé de favoris.</Text>
+                <Text style={style.text}>Cliquez sur l'icône ci-dessous pour enregistrer vos articles préférés.</Text>
+                <Text style={style.text}>Vous pourrez les consulter plus tard, même hors ligne</Text>
+                <Image 
+                    source={require('../images/favoris.png')}
+                    style={style.image}
+                />
+            </View>
+        )
+    }
 }
 
 export default connect(mapStateToProps)(Favorites)
 
 const style = StyleSheet.create({
     container:{
-        flex: 1,
+        minHeight: height - 88,
         backgroundColor: "#606060",
         alignItems: "center",
         paddingTop: 7.5,
+        paddingHorizontal: 15,
     },
     empty:{
         flex: 1,

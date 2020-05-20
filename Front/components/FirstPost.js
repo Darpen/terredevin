@@ -1,30 +1,32 @@
 import React from 'react'
-import { StyleSheet, View, Text, Image } from 'react-native'
+import { StyleSheet, View, Text, Image, Dimensions } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+
+const { width } = Dimensions.get("window")
 
 export default function FirstPost(props){
 
     //Récupération du champs 'Description' de l'article
-    const description = props.article.description.split('>') 
+    const description = props.post.description.split('>') 
     //Récupération de la balise image dans la description
     const image = description[4].split(' ')[3]
     //Récupération de l'url de la source
     const source = image.split('"')[1]
     //Récupération de la catégorie principale
-    const mainCategory = props.article.categories[1].name
+    const mainCategory = props.post.categories[1].name
 
     return(
         <View style={style.container}>
             <View style={style.line}></View>
             <TouchableOpacity
-                onPress={() => props.onPress(props.article)}
+                onPress={() => props.onPress(props.post)}
             >
                 <Image 
                     style={style.picture}
                     source={{uri: source}}
                 />
                 <View style={style.text}>
-                    <Text style={style.title}>{props.article.title}</Text>
+                    <Text style={style.title}>{props.post.title}</Text>
                     <Text style={style.category}>{mainCategory}</Text>
                 </View>
             </TouchableOpacity>
@@ -55,7 +57,7 @@ const style = StyleSheet.create({
     title:{
         flex: 1,
         fontFamily: 'Sen-Regular',
-        fontSize: 18,
+        fontSize: (width < 400) ? 14 : 18,
         color: '#404040',
     },
     category:{

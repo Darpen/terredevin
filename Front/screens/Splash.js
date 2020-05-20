@@ -1,9 +1,10 @@
 import React from 'react'
 import { View, Image, StyleSheet } from 'react-native'
 
-export default function Splash(){
+export default function Splash(props){
     return(
         <View style={style.container}>
+            {props.checkUpdates()}
             <Image 
                 source={require('../images/logo.png')}
             />

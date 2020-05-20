@@ -1,35 +1,37 @@
 import React from 'react'
-import { StyleSheet, Text, Image, View } from 'react-native'
+import { StyleSheet, Text, Image, View, Dimensions } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
 /**
  * PROPS : 
- *      article : object  
+ *      post : object  
  */
+
+const { width } = Dimensions.get("window")
 
 export default function Post(props){
     //Récupération du champs 'Description' de l'article
-    const description = props.article.description.split('>') 
+    const description = props.post.description.split('>') 
     //Récupération de la balise image dans la description
     const image = description[1].split(' ')[3]
     //Récupération de l'url de la source
     const source = image.split('"')[1]
     //Récupération de la catégorie principale
-    const mainCategory = props.article.categories[1].name
+    const mainCategory = props.post.categories[1].name
     
     return(
         <View style={style.container}>
             <View style={style.line}></View>
             <TouchableOpacity 
                 style={style.post}
-                onPress={() => props.onPress(props.article)}
+                onPress={() => props.onPress(props.post)}
             >
                 <Image 
                     style={style.picture}
                     source={{uri: source}}
                 />
                 <View style={style.text}>
-                    <Text style={style.title}>{props.article.title}</Text>
+                    <Text style={style.title}>{props.post.title}</Text>
                     <View>
                         <Text style={style.category}>{mainCategory}</Text>
                     </View>
@@ -68,7 +70,7 @@ const style = StyleSheet.create({
     title:{
         flex: 1,
         fontFamily: 'Sen-Regular',
-        fontSize: 18,
+        fontSize: (width < 400) ? 14 : 18,
         color: '#404040',
         textAlign: 'right'
     },

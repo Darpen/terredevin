@@ -1,9 +1,13 @@
 import React from 'react'
 import { StyleSheet, Text, ScrollView, View, Image } from 'react-native'
-import {connect} from 'react-redux'
-import HTMLView from 'react-native-htmlview'
-import config from '../config'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+
+import { connect } from 'react-redux'
+import HTMLView from 'react-native-htmlview'
+import WebView from 'react-native-webview'
+
+import config from '../config'
+
 
 const mapStateToProps = (state) => {
     return {
@@ -11,16 +15,16 @@ const mapStateToProps = (state) => {
     }
 }
 
-function Article(props){
+function PostDetails(props){
 
-    const article = props.route.params.article
-    const picture = article.description.split('>')[4].split(' ')[3].split('"')[1]
-    const day = article.pubDate.split('-')[2].slice(0,2)
-    const month = config.months[article.pubDate.split('-')[1] - 1]
-    const year = article.pubDate.split('-')[0]
+    const post = props.route.params.post
+    const picture = post.description.split('>')[4].split(' ')[3].split('"')[1]
+    const day = post.pubDate.split('-')[2].slice(0,2)
+    const month = config.months[post.pubDate.split('-')[1] - 1]
+    const year = post.pubDate.split('-')[0]
     const pubDate = day + ' ' + month + ' ' + year
 
-    const arrayContent = article.content.split('\n')
+    const arrayContent = post.content.split('\n')
     const content = []
 
     arrayContent.forEach(element => {
@@ -52,24 +56,32 @@ function Article(props){
         return false
     }
 
-    return(
+    // Vérification si article contient une vidéo
+    function hasVideo() {
+        if (post.description.indexOf("<iframe") != -1) {
+            const index = post.description.indexOf("<iframe")
+            const url = post.description.slice(index).split(" ")[3].split('"')[1]
+            return url
+        }
+        return post.description.indexOf("<iframe")
+    }
 
+    return (
         <ScrollView style={style.scrollview}>
-
             {/* TITLE */}
             <View style={style.title}>
-                <Text style={style.titleText}>{article.title}</Text>
+                <Text style={style.titleText}>{post.title}</Text>
                 <Text style={style.titleDate}>{pubDate}</Text>
             </View>
 
             {/* MAIN CATEGORY AND FAVORITE */}
             <View style={style.category}>
-                <Text style={style.categoryText}>{article.categories[1].name}</Text>  
+                <Text style={style.categoryText}>{post.categories[1].name}</Text>  
                 <TouchableOpacity
-                    onPress={() => toogleFavorite(article.id, article)}
+                    onPress={() => toogleFavorite(post.id, post)}
                 >
                     <Image 
-                        source={isPostFavorite(article.id) ? (
+                        source={isPostFavorite(post.id) ? (
                             require('../images/isFavorite.png')
                         ) : (
                             require('../images/favoris.png')
@@ -79,21 +91,29 @@ function Article(props){
                 </TouchableOpacity>
             </View>
 
-            {/* PICTURE */}
-            <Image 
-                source={{uri: picture}}
-                style={style.picture}
-            />
+            {/* VIDEO OR PICTURE*/}
+            {hasVideo() != -1 ? (
+                <WebView
+                    source={{ uri: hasVideo() }}
+                    style={style.video}
+                />
+            ) : (
+                <Image 
+                    source={{uri: picture}}
+                    style={style.picture}
+                />
+            )}
+            
 
             {/* TAGS */}
             <View style={style.tags}>
-                {article.categories.slice(2).map((tag, index) => (
+                {post.categories.slice(2).map((tag, index) => (
                     <Text style={style.tag} key={index}>{tag.name}</Text>
                 ))}
             </View>
 
             {/* CONTENT */}
-            {content.map((p, index) => (<HTMLView style={style.content} stylesheet={htmlstyles} key={index} value={p}/>))}
+            {content.map((p, index) => (<HTMLView style={style.content} stylesheet={htmlstyles} key={index} value={p} />))}
 
             {/* AUTHOR */}
             <View style={style.author}>
@@ -103,13 +123,13 @@ function Article(props){
                     />
                     <Text style={style.authorText}>Auteur</Text>
                 </View>
-                <Text style={style.authorName}>{article.creator}</Text>
+                <Text style={style.authorName}>{post.creator}</Text>
             </View>            
         </ScrollView>
     )
 }
 
-export default connect(mapStateToProps)(Article)
+export default connect(mapStateToProps)(PostDetails)
 
 const htmlstyles = StyleSheet.create({
     strong:{
@@ -204,4 +224,8 @@ const style = StyleSheet.create({
         fontSize: 12,
         color: "#404040"
     },
+    video: {
+        width: '100%',
+        height: 236
+    }
 })

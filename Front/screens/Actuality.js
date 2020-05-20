@@ -1,24 +1,20 @@
 import React from 'react'
-import { StyleSheet, Text, View, Button, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, Dimensions, ScrollView } from 'react-native'
 import { connect } from 'react-redux'
-import Axios from 'axios'
 import Post from '../components/Post'
 import FirstPost from '../components/FirstPost'
-import Event from '../components/Event'
-import Splash from '../screens/Splash'
+import SliderEvents from '../components/SliderEvents'
 
 let mapStateToProps = (state) => {
-    console.log('State: ', state)
     return {
         posts: state.contentReducer.posts,
         events: state.contentReducer.events
     }
 }
 
-const URL = "http://8c6d8903.ngrok.io"
-
 class Actuality extends React.Component{
 
+    // Envoi des données vers le store Redux
     tooglePosts = (data) => {
         const action = {
             type: "UPDATE_POSTS",
@@ -29,6 +25,7 @@ class Actuality extends React.Component{
         this.props.dispatch(action)
     }
 
+    // Envoi des données vers le store Redux
     toogleEvents = (data) => {
         const action = {
             type: "UPDATE_EVENTS",
@@ -47,8 +44,8 @@ class Actuality extends React.Component{
         }
     }
 
-    goToArticle = (article) => {
-        this.props.navigation.navigate('Article', {article:article})
+    goToPost = (post) => {
+        this.props.navigation.navigate('Article', {post:post})
     }
 
     goToEvent = (event, image) => {
@@ -68,73 +65,61 @@ class Actuality extends React.Component{
                         nextEvents.push(event)
                     }
                 } catch {
-                    console.log("erreur format")
+                    // console.log("erreur format")
                 }
             })
             return nextEvents
         }
     }
 
-    componentDidMount(){
-        Axios.get(URL + '/articles/20')
-        .then(response => this.tooglePosts(response.data))
-        .catch(error => console.log(error))
+    // componentDidMount(){
+    //     Axios.get(URL + '/articles/20')
+    //     .then(response => this.tooglePosts(response.data))
+    //     .catch(error => console.log(error))
 
-        Axios.get(URL + '/evenements')
-        .then(response => this.toogleEvents(response.data))
-        .catch(error => console.log(error))
-    }
+    //     Axios.get(URL + '/evenements')
+    //     .then(response => this.toogleEvents(response.data))
+    //     .catch(error => console.log(error))
+    // }
 
     render(){
-        console.log('Render: \n', Object.prototype.toString.call(this.props.posts))
-        if(
-        Object.prototype.toString.call(this.props.posts) == '[object Array]' 
-            && 
-        Object.prototype.toString.call(this.props.events) == '[object Array]'
-        ){
-            return(
-                <ScrollView style={style.container}>
-                    
-                    {/* SLIDER EVENTS */}
-                    <View style={style.slider}>
-                        {this.props.events[0] !== undefined ? (
-                            this.getNextEvents(this.props.events).map( (event, index) => (
-                                <Event 
-                                    key={index}
-                                    event={event}
-                                    onPress={this.goToEvent}
-                                />
-                            ))
-                        ) : (
-                            <></>
-                        )}
-                        <Text style={style.topTitle}>Evénements</Text>
-                    </View>
-
-                    {/* POSTS MAPPING */}
-                    {this.props.posts.map((article, index) => (
-                        index === 0 ? (
-                            <FirstPost 
-                                key = {index}
-                                article = {article}
-                                onPress = {this.goToArticle}
+        return(
+            <ScrollView style={style.container}>
+                
+                {/* SLIDER EVENTS */}
+                <View style={style.slider}>
+                    {this.props.events[0] !== undefined ? (
+                        this.getNextEvents(this.props.events).map( (event, index) => (
+                            <SliderEvents 
+                                key={index}
+                                event={event}
+                                onPress={this.goToEvent}
                             />
-                        ) : (
-                            <Post 
-                                key = {index}
-                                article = {article}
-                                onPress = {this.goToArticle}
-                            />
-                        )
-                    ))}
+                        ))
+                    ) : (
+                        <></>
+                    )}
+                    <Text style={style.topTitle}>Evénements</Text>
+                </View>
 
-                </ScrollView>
-            )
-        } else {
-            return(
-                <Splash />
-            )
-        }
+                {/* POSTS MAPPING */}
+                {this.props.posts.map((post, index) => (
+                    index === 0 ? (
+                        <FirstPost 
+                            key = {index}
+                            post = {post}
+                            onPress = {this.goToPost}
+                        />
+                    ) : (
+                        <Post 
+                            key = {index}
+                            post = {post}
+                            onPress = {this.goToPost}
+                        />
+                    )
+                ))}
+            </ScrollView>
+        )
     }
 }
 
