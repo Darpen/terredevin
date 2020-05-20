@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20200220160201 extends AbstractMigration
+final class Version20200429142847 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -22,7 +22,7 @@ final class Version20200220160201 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('CREATE TABLE evenement (id INT AUTO_INCREMENT NOT NULL, title VARCHAR(255) NOT NULL, link VARCHAR(255) NOT NULL, comments VARCHAR(255) NOT NULL, pub_date DATE NOT NULL, creator VARCHAR(255) NOT NULL, guid VARCHAR(255) NOT NULL, description VARCHAR(255) NOT NULL, content VARCHAR(255) NOT NULL, comment_rss VARCHAR(255) NOT NULL, comments_slash VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('ALTER TABLE evenement ADD startdate VARCHAR(255) NOT NULL, ADD enddate VARCHAR(255) NOT NULL, ADD location VARCHAR(255) NOT NULL, ADD adress VARCHAR(255) NOT NULL, ADD zip VARCHAR(255) NOT NULL, ADD city VARCHAR(255) NOT NULL');
     }
 
     public function down(Schema $schema) : void
@@ -30,6 +30,6 @@ final class Version20200220160201 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('DROP TABLE evenement');
+        $this->addSql('ALTER TABLE evenement DROP startdate, DROP enddate, DROP location, DROP adress, DROP zip, DROP city');
     }
 }

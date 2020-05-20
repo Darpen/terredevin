@@ -6,6 +6,8 @@ namespace App\Command;
 use App\Entity\Evenement;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
+use phpDocumentor\Reflection\Location;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,9 +50,8 @@ class fluxRssEvenementCommand extends Command
      * Will be executed every 5 minutes
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return
-     * @throws DBALException
-     * @throws \Exception
+     * @return int
+     * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -87,7 +88,12 @@ class fluxRssEvenementCommand extends Command
             $content = $item->children($nsEvenement['content']);
             $wfw = $item->children($nsEvenement['wfw']);
             $slash = $item->children($nsEvenement['slash']);
-
+            $startdate = $item->children($nsEvenement['ev'])->children($nsEvenement['ev'])[0];
+            $enddate = $item->children($nsEvenement['ev'])->children($nsEvenement['ev'])[1];
+            $location = $item->children($nsEvenement['ev'])->children($nsEvenement['ev'])[2];
+            $adress = $item->children($nsEvenement['ev'])->children($nsEvenement['ev'])[3];
+            $zip = $item->children($nsEvenement['ev'])->children($nsEvenement['ev'])[4];
+            $city = $item->children($nsEvenement['ev'])->children($nsEvenement['ev'])[5];
             /**
              * Variable permettant de voir si l'evenement existe ou pas.
              * retourne un booleen
@@ -116,7 +122,12 @@ class fluxRssEvenementCommand extends Command
                 $evenement->setContent($content);
                 $evenement->setCommentRss($wfw);
                 $evenement->setCommentsSlash($slash);
-
+                $evenement->setStartdate($startdate);
+                $evenement->setEnddate($enddate);
+                $evenement->setLocation($location);
+                $evenement->setAdress($adress);
+                $evenement->setZip($zip);
+                $evenement->setCity($city);
                 /**
                  * Persistence des données
                  */
