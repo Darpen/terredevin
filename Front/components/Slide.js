@@ -42,10 +42,11 @@ const style = StyleSheet.create({
     container:{
         width: width,
         position: 'relative',
+        borderColor: "blue",
     },
     picture:{
         width: '100%',
-        height: 225,
+        height: 236,
         backgroundColor: 'pink',
     },
     linearGradient:{

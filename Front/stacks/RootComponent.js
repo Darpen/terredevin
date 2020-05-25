@@ -11,7 +11,7 @@ import Axios from 'axios'
 import Splash from '../screens/Splash'
 import CustomDrawerContent from '../components/CustomDrawer'
 
-const URL = "http://c64eb07f.ngrok.io"
+const URL = "http://928dfeca.ngrok.io"
 
 const mapStateToProps = (state) => {
     return {

@@ -1,9 +1,9 @@
-import React from 'react'
-import { StyleSheet, Text, View, ScrollView, Dimensions } from 'react-native'
+import React, { useRef } from 'react'
+import { StyleSheet, Text, View, ScrollView, Dimensions, PanResponder, Animated} from 'react-native'
 import { connect } from 'react-redux'
 import Post from '../components/Post'
 import FirstPost from '../components/FirstPost'
-import Slider from "../components/Slider"
+import Slide from "../components/Slide"
 
 let mapStateToProps = (state) => {
     return {
@@ -15,6 +15,86 @@ let mapStateToProps = (state) => {
 const { width } = Dimensions.get("window")
 
 class Actuality extends React.Component{
+
+    constructor(props) {
+        super(props)
+        this.state = {
+            index: 0,
+            translate: new Animated.Value(0),
+            page: 0
+        }
+    }
+
+    UNSAFE_componentWillMount() {
+        this.panResponder = PanResponder.create({
+            onStartShouldSetPanResponder: (event, gestureState) => false,
+            onStartShouldSetPanResponderCapture: (event, gestureState) => false,
+            onMoveShouldSetPanResponder: (event, gestureState) => Math.abs(gestureState.dx) > 7,
+            onMoveShouldSetPanResponderCapture: (event, gestureState) => true,
+            onPanResponderTerminationRequest: () => false,
+            onPanResponderMove: Animated.event([null, {dx: this.state.translate}]),
+            onPanResponderRelease: this.endGesture.bind(this),
+            onPanResponderTerminate: (event, gestureState) => {
+                console.log("Terminate")
+            }
+        })
+    }
+
+    getStyle = () => {
+        return {
+            slider: {
+                width: width * (5 + 2), //Nombre d'événements + 2 pour les images fictives
+                height: 236,
+                flexDirection: 'row',
+                left: (this.state.page + 1) * -1 * width,
+                transform: [{
+                    translateX: this.state.translate
+                }]
+            }
+        }
+    }
+
+    endGesture = (event, gestureState) => {
+        let toValue = 0
+        if (Math.abs(gestureState.dx) / width > 0.2) {
+            if (gestureState.dx < 0) {
+                toValue = width * -1
+            } else {
+                toValue = width
+            }
+        }
+        Animated.timing(
+            this.state.translate,
+            {
+                toValue:toValue,
+                duration: 300,
+                useNativeDriver: true
+            }
+        ).start(() => {
+            this.state.translate.setValue(0)
+            if (toValue < 0) {
+                this.nextPage()
+            } else if (toValue > 0) {
+                this.prevPage()
+            }
+        })
+    }
+
+    nextPage = () => {
+        let page = this.state.page + 1
+        if (page >= 5) {
+            page = 0
+        }
+        this.setState({page})
+    }
+
+    prevPage = () => {
+        let page = this.state.page - 1
+        if (page < 0) {
+            page = 4 //getNextEvents.length - 1
+        }
+        this.setState({page})
+    }
 
     // Envoi des données Posts vers le store Redux
     tooglePosts = (data) => {
@@ -88,17 +168,67 @@ class Actuality extends React.Component{
     }
 
     render() {
-        
+        console.log(this.state.page)
         return(
             <ScrollView style={style.container}>
+                <Text style={style.topTitle}>Actualités</Text>
                 
                 {/* SLIDER EVENTS */}
-                <View style={style.slider}>
-                    <Slider
-                        nextEvents={this.getNextEvents(this.props.events, 5)}
+                <Animated.View style={this.getStyle().slider} {...this.panResponder.panHandlers}>
+                    <Slide
+                        event={this.getNextEvents(this.props.events, 5)[4]}
                         onPress={this.goToEvent}
                     />
-                    <Text style={style.topTitle}>Evénements à venir</Text>
+                    {this.getNextEvents(this.props.events, 5).map((event, k) => (
+                            <Slide
+                                key={k}
+                                event={event}
+                                onPress={this.goToEvent}
+                            />
+                    ))}
+                    <Slide
+                        event={this.getNextEvents(this.props.events, 5)[0]}
+                        onPress={this.goToEvent}
+                    />
+                </Animated.View>
+
+                <View style={{height: 20, flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+                    <View
+                    style={{
+                        width: 10,
+                        height: 10,
+                        backgroundColor: this.state.page == 0 ? "#5A2A75" : "#B6A962",
+                        marginHorizontal: 5
+                        }}></View>
+                    <View
+                    style={{
+                        width: 10,
+                        height: 10,
+                        backgroundColor: this.state.page == 1 ? "#5A2A75" : "#B6A962",
+                        marginHorizontal: 5
+                        }}></View>
+                    <View
+                    style={{
+                        width: 10,
+                        height: 10,
+                        backgroundColor: this.state.page == 2 ? "#5A2A75" : "#B6A962",
+                        marginHorizontal: 5
+                        }}></View>
+                    <View
+                    style={{
+                        width: 10,
+                        height: 10,
+                        backgroundColor: this.state.page == 3 ? "#5A2A75" : "#B6A962",
+                        marginHorizontal: 5
+                        }}></View>
+                    <View
+                    style={{
+                        width: 10,
+                        height: 10,
+                        backgroundColor: this.state.page == 4 ? "#5A2A75" : "#B6A962",
+                        marginHorizontal: 5
+                    }}></View>
+                    
                 </View>
 
                 {/* POSTS MAPPING */}
@@ -138,8 +268,6 @@ const style = StyleSheet.create({
         backgroundColor: '#B6A962',
         justifyContent: 'center',
         alignItems: 'center',
-        position: 'absolute',
-        top: 0,
     },
     text:{
         fontFamily: 'Sen-Regular',
@@ -147,8 +275,7 @@ const style = StyleSheet.create({
         color: '#404040'
     },
     slider: {
-        height: 236,
-        flexDirection: 'row',
-        position: 'relative',
+        // borderColor: "blue",
+        // borderWidth: 2,
     },
 })
