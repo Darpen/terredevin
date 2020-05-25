@@ -4,7 +4,7 @@ import { View, Image, StyleSheet } from 'react-native'
 export default function Splash(props){
     return(
         <View style={style.container}>
-            {props.checkUpdates()}
+            {props.getData()}
             <Image 
                 source={require('../images/logo.png')}
             />

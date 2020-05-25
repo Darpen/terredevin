@@ -5,7 +5,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 
 export default function Evenements(props){
     const event = props.route.params.event
-    const image = props.route.params.image
+    const source = event.description.split('<')[5].split(',')[1].split(' ')[1]
     const arrayContent = event.description.split('\n')
     const content = []
 
@@ -30,7 +30,7 @@ export default function Evenements(props){
         return "Du " + startdate + " au " + enddate
     }
 
-    return(
+    return (
         <ScrollView style={style.scrollview}>
             
             {/* HEADER TITLE */}
@@ -40,7 +40,7 @@ export default function Evenements(props){
             </View>
 
             <Image 
-                source={{uri: image}}
+                source={{uri: source}}
                 style={style.image}
             />
 

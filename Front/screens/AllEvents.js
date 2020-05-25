@@ -33,14 +33,11 @@ function getNextEvents(events){
 
 function Events(props) {
 
-    function goToEventDetails(event) {
-        props.navigation.navigate("Actualités", {
-            screen: "Evenement",
-            params: {event: event}
-        })
+    function goToEventContent(event) {
+        props.navigation.navigate("Evénement", {event: event})
     }
 
-    return(
+    return (
         <ScrollView contentContainerStyle={{backgroundColor: "#FFFFFF"}}>
             {Object.prototype.toString.call(props.events) == '[object Array]' ? (
                 getNextEvents(props.events).map((event, index) => (
@@ -48,13 +45,13 @@ function Events(props) {
                         <FirstEvent 
                         key={index}
                         event={event}
-                        onPress={goToEventDetails}    
+                        onPress={goToEventContent}    
                         />
                     ) : (
                         <Event 
                         key={index}
                         event={event}
-                        onPress={goToEventDetails}    
+                        onPress={goToEventContent}    
                         />
                     )
                 ))

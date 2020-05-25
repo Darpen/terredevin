@@ -6,7 +6,6 @@ import {
 } from '@react-navigation/drawer';
 import { Linking, Image, View, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { TextInput } from 'react-native-gesture-handler';
 
 export default function CustomDrawerContent(props) {
     return (
@@ -44,7 +43,7 @@ export default function CustomDrawerContent(props) {
                     inactiveTintColor="#FFF"
                     icon={() => (
                         <Image
-                            source={require('../images/favoris.png')}
+                            source={require('../images/icon-oenotourisme.png')}
                             style={{width: 15, height: 20}}
                         />
                     )}

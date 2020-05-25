@@ -3,29 +3,25 @@ import { StyleSheet, View, Image, Text, Dimensions } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { LinearGradient } from 'expo-linear-gradient'
 
-/**
- * PROPS : 
- *  event (object)
- *  onPress (function)
- */
+const {width} = Dimensions.get("window")
 
-const {width} = Dimensions.get('screen')
-
-export default function SliderEvent(props){
+export default function Slide(props) {
 
     const source = props.event.description.split('<')[5].split(',')[1].split(' ')[1]
-    
     const startDate = props.event.startdate.split('@')[0]
-
 
     return(
         <TouchableOpacity style={style.container} onPress={() => props.onPress(props.event, source)}>
+            
+            {/* IMAGE EVENEMENT */}
             <Image 
                 source={{uri: source}}
                 style={style.picture}
             />
+
+            {/* BANDEAU BAS INFORMATIONS EVENEMENT */}
             <LinearGradient
-                colors={['transparent' , 'rgba(0,0,0,0.7)']}
+                colors={["transparent" , "rgba(0,0,0,0.7)"]}
                 start={[0, 0]}
                 locations={[0, 0.4]}
                 style={style.linearGradient}

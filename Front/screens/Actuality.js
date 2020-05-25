@@ -1,9 +1,9 @@
 import React from 'react'
-import { StyleSheet, Text, View, Dimensions, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, Dimensions } from 'react-native'
 import { connect } from 'react-redux'
 import Post from '../components/Post'
 import FirstPost from '../components/FirstPost'
-import SliderEvents from '../components/SliderEvents'
+import Slider from "../components/Slider"
 
 let mapStateToProps = (state) => {
     return {
@@ -11,6 +11,8 @@ let mapStateToProps = (state) => {
         events: state.contentReducer.events
     }
 }
+
+const { width } = Dimensions.get("window")
 
 class Actuality extends React.Component{
 
@@ -47,60 +49,56 @@ class Actuality extends React.Component{
         this.props.dispatch(action)
     }
 
-    postsMapping = (posts) => {
-        try{
-            posts.map(post => <Text>{post.title}</Text>)
-        } catch {
-            <Text>Impossible de map</Text>
-        }
-    }
-
+    // Redirection vers la page PostContent
     goToPost = (post) => {
         this.props.navigation.navigate('Article', {post:post})
     }
 
-    goToEvent = (event, image) => {
-        this.props.navigation.navigate('Evenement', {event: event, image: image})
+    // Redirection vers la page EventContent
+    goToEvent = (event) => {
+        this.props.navigation.navigate('Evénements', {
+            screen: "Evénement",
+            params: {
+                event: event,
+            }
+        })
     }
 
-    getNextEvents = (events) => {
-        if(events[0] !== undefined){
-            let nextEvents = []
-            events.map((event) => {
-                // Gestion des exceptions pour les événements ne permettant pas de récupérer l'image ou la date de début
-                try{
-                    const source = event.description.split('<')[5].split(',')[1].split(' ')[1]
-                    const startDate = event.startdate.split('@')[0]
+    /**
+     * Récupération des n prochains événements à venir à partir de la date du jour
+     * Présence d'une date de début et d'une image obligatoire pour apparaître dans le slider
+     * Retourne un nouveau tableau d'événement de longueur n
+     */
+    getNextEvents = (events, number) => {
+        let nextEvents = []
+        events.map((event) => {
+            // Gestion des exceptions pour les événements ne permettant pas de récupérer l'image ou la date de début
+            try{
+                const source = event.description.split('<')[5].split(',')[1].split(' ')[1]
+                const startDate = event.startdate.split('@')[0]
 
-                    if(Date.parse(event.pubDate) > Date.now() && nextEvents.length < 1){
-                        nextEvents.push(event)
-                    }
-                } catch {
-                    // console.log("erreur format")
+                if(Date.parse(event.pubDate) > Date.now() && nextEvents.length < number){
+                    nextEvents.push(event)
                 }
-            })
-            return nextEvents
-        }
+            } catch {
+                console.log("erreur format")
+            }
+        })
+        return nextEvents
     }
 
-    render(){
+    render() {
+        
         return(
             <ScrollView style={style.container}>
                 
                 {/* SLIDER EVENTS */}
                 <View style={style.slider}>
-                    {this.props.events[0] !== undefined ? (
-                        this.getNextEvents(this.props.events).map( (event, index) => (
-                            <SliderEvents 
-                                key={index}
-                                event={event}
-                                onPress={this.goToEvent}
-                            />
-                        ))
-                    ) : (
-                        <></>
-                    )}
-                    <Text style={style.topTitle}>Evénements</Text>
+                    <Slider
+                        nextEvents={this.getNextEvents(this.props.events, 5)}
+                        onPress={this.goToEvent}
+                    />
+                    <Text style={style.topTitle}>Evénements à venir</Text>
                 </View>
 
                 {/* POSTS MAPPING */}
@@ -148,13 +146,9 @@ const style = StyleSheet.create({
         fontSize: 18,
         color: '#404040'
     },
-    slider:{
+    slider: {
+        height: 236,
         flexDirection: 'row',
         position: 'relative',
     },
-    wait:{
-        flex:1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    }
 })

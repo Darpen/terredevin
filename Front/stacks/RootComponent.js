@@ -1,103 +1,191 @@
 // IMPORT REACT
 import React from 'react'
-import { Image } from 'react-native'
-
-// IMPORT REACT NAVIGATION
+import { Image, StyleSheet } from 'react-native'
 import { createDrawerNavigator } from '@react-navigation/drawer'
-
-//IMPORT REDUX
 import { connect } from 'react-redux'
-
-// IMPORT DES COMPOSANTS
 import Home from './Home'
 import FavoritesStack from './FavoritesStack'
-import EventsStack from './EventsStack'
+import EventsStack from "./EventsStack"
 import DegustationStack from "./DegustationsStack"
 import Axios from 'axios'
 import Splash from '../screens/Splash'
-import CustomDrawerContent from '../components/CustomDrawer';
+import CustomDrawerContent from '../components/CustomDrawer'
 
-const URL = "http://d13eef6d.ngrok.io"
+const URL = "http://c64eb07f.ngrok.io"
 
 const mapStateToProps = (state) => {
     return {
         posts: state.contentReducer.posts,
-        events: state.contentReducer.events
+        events: state.contentReducer.events,
+        degustations: state.contentReducer.degustations
     }
 }
 
-let state = {
-    posts: [],
-    events: []
+/* Statut de chaque récupération de contenu (articles, événements et dégustations) : ne passe à TRUE que lorsque 
+la récupération est terminée et que le format est correcte pour utilisation sans erreur*/
+let isReady = {
+    posts: false,
+    events: false,
+    degustations: false
 }
+
+/* Variables temporaires pour éviter les re-rendu en utilisant le state */
+let posts = []
+let events = []
+let degustations = []
 
 const Drawer = createDrawerNavigator()
 
 class RootComponent extends React.Component {
 
-    updateData = () => {
-        Axios.get(URL + '/articles/20')
-            .then(response => state.posts = response.data)
-            .catch(error => console.log(error))
-    
-        Axios.get(URL + '/evenements')
-            .then(response => state.events = response.data)
-            .catch(error => console.log(error))
-    }
-
-    UNSAFE_ComponentWillMount() {
-        this.updateData()
-    }
-
-    getIcon = (isFocused) => {
-        if (isFocused) {
-            return (
-                <Image
-                    source={require('../images/isFavorite.png')}
-                    style={{width: 15, height: 20}}
-                />
-            )
-        } else {
-            <Image
-                source={require('../images/favoris.png')}
-                style={{width: 15, height: 20}}
-            />
+    constructor(props) {
+        super(props)
+        this.state = {
+            isLoaded: false
         }
     }
 
-    checkUpdates = () => {
-        try {
-            if (state.posts.length != 0) {
-                if (state.posts[0].title == this.props.posts[0].title) {
-                    console.log("Artiles à jour")
+    // Récupération des articles
+    getPosts = () => {
+        // Récupération des 20 derniers articles
+        Axios.get(URL + "/articles/20")
+            .then(response => (
+                posts = response.data,
+                this.checkUpdates("posts")
+            ))
+            .catch(error => console.log(error))
+    }
+
+    // Récupération des événements
+    getEvents = () => {
+        Axios.get(URL + "/evenements")
+            .then(response => (
+                events = response.data,
+                this.checkUpdates("events")
+            ))
+            .catch(error => console.log(error))
+    }
+
+    // Récupération des dégustations
+    getDegustations = () => {
+        Axios.get(URL + "/alldegustations")
+            .then(response => (
+                degustations = response.data,
+                this.checkUpdates("degustations")
+            ))
+            .catch(error => console.log(error))
+    }
+
+    // Récupération de l'ensemble des données
+    getData = () => {
+        this.getPosts()
+        this.getEvents()
+        this.getDegustations()
+    }
+
+    //  Stockage des données articles dans le store redux
+    tooglePosts = (data) => {
+        const action = {
+            type: "UPDATE_POSTS",
+            value: {
+                data : data
+            }
+        }
+        this.props.dispatch(action)
+    }
+
+    // Stockage des données événements dans le store redux
+    toogleEvents = (data) => {
+        const action = {
+            type: "UPDATE_EVENTS",
+            value: {
+                data : data
+            }
+        }
+        this.props.dispatch(action)
+    }
+
+    // Stockage des données dégustations dans le store redux
+    toogleDegustations = (data) => {
+        const action = {
+            type: "UPDATE_DEGUSTATIONS",
+            value: {
+                data : data
+            }
+        }
+        this.props.dispatch(action)
+    }
+
+    /**
+     * Comparaison des données récupérées et des données déjà persistées
+     * Si différentes ou aucune données persistées : mise à jour du store redux
+     */
+    checkUpdates = (key) => {
+        switch (key) {
+            case "posts":
+                if (typeof (posts) === "object") {
+                    if (this.props.posts[0] == undefined || posts[0].id !== this.props.posts[0].id) {
+                        console.log("Mise à jour des articles")
+                        this.tooglePosts(posts)
+                    } else {
+                        console.log("Les articles sont à jour")
+                    }
+                    isReady.posts = true
+                    this.isLoaded()
                 } else {
-                    console.log("Besoin de mettre à jour")
-                    this.updateData()
+                    this.getPosts()
                 }
-            }
-            else {
-                console.log("pas d'article")
-                this.updateData()
-            }
-        } catch {
-            console.log("erreur checkUpdates")
-            this.updateData()
+                break
+            
+            case "events":
+                if (typeof (events) === "object") {
+                    if (this.props.events[0] == undefined || events[0].id !== this.props.events[0].id) {
+                        console.log("Mise à jour des événements")
+                        this.toogleEvents(events)
+                    } else {
+                        console.log("Les événements sont à jour")
+                    }
+                    isReady.events = true
+                    this.isLoaded()
+                } else {
+                    this.getEvents()
+                }
+                break
+            
+            case "degustations":
+                if (typeof (degustations) === "object") {
+                    if (this.props.degustations[0] == undefined || degustations[0].id !== this.props.degustations[0].id) {
+                        console.log("Mise à jour des dégustations")
+                        this.toogleDegustations(degustations)
+                    } else {
+                        console.log("Les dégustations sont à jour")
+                    }
+                    isReady.degustations = true
+                    this.isLoaded()
+                } else {
+                    this.getDegustations()
+                }
+                break
+        }
+    }
+
+    /**
+     * Si tous les éléments sont chargés, changement du state pour re-rendu de l'application
+     */
+    isLoaded = () => {
+        if (isReady.posts && isReady.events && isReady.degustations) {
+            this.setState({isLoaded: true})
         }
     }
     
     render() {
-        if (
-            Object.prototype.toString.call(this.props.posts) == '[object Array]'
-            &&
-            Object.prototype.toString.call(this.props.events) == '[object Array]'
-        ) {
-            this.checkUpdates()
+        if (this.state.isLoaded) {
             return (
                 <Drawer.Navigator
                     drawerContent={(props)=><CustomDrawerContent {...props} />}
-                    initialRouteName='Actualités'
+                    initialRouteName='Home'
                     drawerPosition='right'
-                    hideStatusBar={true}
+                    hideStatusBar={false}
                     statusBarAnimation='none'
                     backBehavior='initialRoute'
                     drawerContentOptions={{
@@ -109,6 +197,7 @@ class RootComponent extends React.Component {
                             fontSize: 20,
                         }
                     }}
+
                 >
                     <Drawer.Screen
                         component={Home}
@@ -118,12 +207,13 @@ class RootComponent extends React.Component {
                                 focused ? (
                                     <Image
                                     source={require('../images/icon-actuality-active.png')}
-                                    style={{width: 15, height: 20}}
+                                    style={style.icon}
                                 />
                                 ) : (
-                                <Image
-                                    source={require('../images/icon-actuality-inactive.png')}
-                                        />
+                                    <Image
+                                            source={require('../images/icon-actuality-inactive.png')}
+                                            style={style.icon}
+                                    />
                                 )
                             ) 
                         }}
@@ -136,12 +226,14 @@ class RootComponent extends React.Component {
                             drawerIcon: ({ focused }) => (
                                 focused ? (
                                     <Image
-                                    source={require('../images/icon-favorites-active.png')}
-                                />
+                                        source={require('../images/icon-favorites-active.png')}
+                                        style={style.icon}
+                                    />
                                 ) : (
-                                <Image
-                                    source={require('../images/icon-favorites-inactive.png')}
-                                        />
+                                    <Image
+                                        source={require('../images/icon-favorites-inactive.png')}
+                                        style={style.icon}
+                                    />
                                 )
                             ) 
                         }}
@@ -155,13 +247,13 @@ class RootComponent extends React.Component {
                                 focused ? (
                                     <Image
                                     source={require('../images/icon-event-active.png')}
-                                    style={{width: 15, height: 20}}
-                                />
+                                    style={style.icon}
+                                    />
                                 ) : (
-                                <Image
-                                    source={require('../images/icon-event-inactive.png')}
-                                    style={{width: 15, height: 20}}
-                                        />
+                                    <Image
+                                        source={require('../images/icon-event-inactive.png')}
+                                        style={style.icon}
+                                    />
                                 )
                             ) 
                         }}
@@ -169,30 +261,32 @@ class RootComponent extends React.Component {
 
                     <Drawer.Screen
                         component={DegustationStack}
-                        name='Dégustation'
+                        name='Dégustations'
                         options={{
                             drawerIcon: ({ focused }) => (
                                 focused ? (
                                     <Image
-                                    source={require('../images/icon-event-active.png')}
-                                    style={{width: 15, height: 20}}
-                                />
+                                        source={require('../images/icon-degustation-active.png')}
+                                        style={style.icon}
+                                    />
                                 ) : (
-                                <Image
-                                    source={require('../images/icon-event-inactive.png')}
-                                    style={{width: 15, height: 20}}
-                                        />
+                                    <Image
+                                        source={require('../images/icon-degustation-inactive.png')}
+                                        style={style.icon}
+                                    />
                                 )
                             ) 
                         }}
                     />
+
                 </Drawer.Navigator>
             )
         }
         else {
             return (
+                // Afficahage du splashscreen tant que les données ne sont pas prête
                 <Splash
-                    checkUpdates={this.checkUpdates}
+                 getData = {this.getData}
                 />
             )
         }
@@ -200,3 +294,10 @@ class RootComponent extends React.Component {
 }
 
 export default connect(mapStateToProps)(RootComponent)
+
+const style = StyleSheet.create({
+    icon: {
+        width: 15,
+        height: 20,
+    }
+})

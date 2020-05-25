@@ -3,14 +3,10 @@ import { View, StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import * as Font from 'expo-font'
 import { AppLoading } from 'expo'
-
-//Imports Redux
 import { Provider } from 'react-redux'
 import Store from './store/configureStore'
 import { persistStore } from 'redux-persist'
 import { PersistGate } from 'redux-persist/integration/react';
-
-// IMPORT DES COMPOSANTS
 import RootComponent from './stacks/RootComponent';
 
 
