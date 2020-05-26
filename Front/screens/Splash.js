@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Image, StyleSheet } from 'react-native'
+import { View, Image, StyleSheet, ActivityIndicator } from 'react-native'
 
 export default function Splash(props){
     return(
@@ -7,6 +7,11 @@ export default function Splash(props){
             {props.getData()}
             <Image 
                 source={require('../images/logo.png')}
+            />
+            <ActivityIndicator
+                color="#5A2A75"
+                size="large"
+                style={style.indicator}
             />
         </View>
     )
@@ -17,6 +22,11 @@ const style = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: "#FFFFFF"
+        backgroundColor: "#FFFFFF",
+        position: "relative"
+    },
+    indicator: {
+        position: "absolute",
+        bottom: 50,
     }
 })

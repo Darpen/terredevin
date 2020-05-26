@@ -193,42 +193,11 @@ class Actuality extends React.Component{
                 </Animated.View>
 
                 <View style={{height: 20, flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
-                    <View
-                    style={{
-                        width: 10,
-                        height: 10,
-                        backgroundColor: this.state.page == 0 ? "#5A2A75" : "#B6A962",
-                        marginHorizontal: 5
-                        }}></View>
-                    <View
-                    style={{
-                        width: 10,
-                        height: 10,
-                        backgroundColor: this.state.page == 1 ? "#5A2A75" : "#B6A962",
-                        marginHorizontal: 5
-                        }}></View>
-                    <View
-                    style={{
-                        width: 10,
-                        height: 10,
-                        backgroundColor: this.state.page == 2 ? "#5A2A75" : "#B6A962",
-                        marginHorizontal: 5
-                        }}></View>
-                    <View
-                    style={{
-                        width: 10,
-                        height: 10,
-                        backgroundColor: this.state.page == 3 ? "#5A2A75" : "#B6A962",
-                        marginHorizontal: 5
-                        }}></View>
-                    <View
-                    style={{
-                        width: 10,
-                        height: 10,
-                        backgroundColor: this.state.page == 4 ? "#5A2A75" : "#B6A962",
-                        marginHorizontal: 5
-                    }}></View>
-                    
+                    <View style={this.state.page == 0 ? style.activeDot : style.inactiveDot}></View>
+                    <View style={this.state.page == 1 ? style.activeDot : style.inactiveDot}></View>
+                    <View style={this.state.page == 2 ? style.activeDot : style.inactiveDot}></View>
+                    <View style={this.state.page == 3 ? style.activeDot : style.inactiveDot}></View>
+                    <View style={this.state.page == 4 ? style.activeDot : style.inactiveDot}></View>
                 </View>
 
                 {/* POSTS MAPPING */}
@@ -274,8 +243,16 @@ const style = StyleSheet.create({
         fontSize: 18,
         color: '#404040'
     },
-    slider: {
-        // borderColor: "blue",
-        // borderWidth: 2,
+    activeDot: {
+        width: 10,
+        height: 10,
+        backgroundColor: "#5A2A75",
+        marginHorizontal: 5
+    },
+    inactiveDot: {
+        width: 5,
+        height: 5,
+        backgroundColor: "#B6A962",
+        marginHorizontal: 5
     },
 })
