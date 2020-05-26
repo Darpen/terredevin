@@ -1,6 +1,5 @@
 import React from 'react'
 import { ScrollView, StyleSheet } from 'react-native'
-import { TouchableOpacity } from "react-native-gesture-handler"
 import { connect } from "react-redux"
 import Degustation from "../components/DegustationPost"
 

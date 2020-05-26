@@ -1,7 +1,6 @@
 import React from "react"
 import { Dimensions, StyleSheet, View, Text, Image } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
-import Degustations from "../screens/Degustations"
 
 /**
  * PROPS : 
