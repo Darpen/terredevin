@@ -1,16 +1,14 @@
-import React from 'react';
-import { View, StatusBar, Dimensions, Image } from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack'
-import Burger from '../components/Burger'
-import AllEvents from '../screens/AllEvents'
-import EventContent from "../screens/EventContent"
+import React from 'react'
+import { Dimensions, View, StatusBar, Image } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { createStackNavigator } from '@react-navigation/stack'
+import Degustation from "../screens/Degustations"
+import DegustationContent from "../screens/DegustationContent"
+import Burger from '../components/Burger'
 
 const { width, height } = Dimensions.get("window")
+const DegustationsStack = createStackNavigator()
 
-const Stack = createStackNavigator()
-
-// Création du menu burger
 function setBurger(navigationProps){
     return (
         <Burger 
@@ -33,22 +31,23 @@ function goBack(navigationProps, routeName) {
     )
 }
 
-export default function EventsStack(props){
-    return(
-        <View style={{flex:1}}>
-            <StatusBar hidden={false}/>
-            <Stack.Navigator
-            initialRouteName="allEvents"
+export default function DegustationStack(props) {
+    return (
+        <View style={{ flex: 1 }}>
+            <StatusBar hidden={false} />
+            <DegustationsStack.Navigator
+            initialRouteName="AllDégustations"
             headerMode="float"
             screenOptions={{
                 headerTitleAlign: "center",
                 headerTintColor:'#5A2A75',
-             }}
+                }}
             >
-                <Stack.Screen 
-                component={AllEvents}
-                name="allEvents"
-                    options={{
+                
+                <DegustationsStack.Screen
+                component={Degustation}
+                name="AllDégustations"
+                options={{
                     headerStyle:{
                         height: height < 550 ? 66 : 88,
                     },
@@ -56,16 +55,16 @@ export default function EventsStack(props){
                         fontFamily: 'Sen-Bold',
                         fontSize: width < 400 ? 20 : 25,
                         color: '#5A2A75'
-                        },
-                    headerTitle: "Evénements",
+                    },
+                    headerTitle: "Dégustations",
                     headerRight: () => setBurger(props.navigation),
                     headerLeft: () => goBack(props.navigation, "Actualités")
-                    
                 }}
                 />
-                <Stack.Screen 
-                component={EventContent}
-                name="Evénement"
+
+                <DegustationsStack.Screen
+                component={DegustationContent}
+                name="Dégustation"
                 options={{
                     headerStyle:{
                         height: height < 550 ? 66 : 88,
@@ -76,10 +75,10 @@ export default function EventsStack(props){
                         color: '#5A2A75'
                     },
                     headerRight: () => setBurger(props.navigation),
-                    headerLeft: () => goBack(props.navigation, "allEvents")
+                    headerLeft: () => goBack(props.navigation, "AllDégustations")
                 }}
                 />
-            </Stack.Navigator>
+            </DegustationsStack.Navigator>
         </View>
     )
 }

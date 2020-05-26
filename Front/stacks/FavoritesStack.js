@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, StatusBar, Dimensions } from 'react-native';
+import { View, StatusBar, Dimensions, Image } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { createStackNavigator } from '@react-navigation/stack'
 import Burger from '../components/Burger'
 import Favorites from '../screens/Favorites'
@@ -16,10 +17,24 @@ function setBurger(navigationProps){
     )
 }
 
+function goBack(navigationProps, routeName) {
+    return (
+        <TouchableOpacity
+            style={{ marginLeft: 30 }}
+            onPress={() => navigationProps.navigate((routeName))}
+        >
+            <Image
+            source={require("../images/go-back.png")}
+            style={{width: 25, height: 25}}
+        />
+        </TouchableOpacity>
+    )
+}
+
 export default function StackFavoris(props){
     return(
         <View style={{flex:1}}>
-            <StatusBar hidden={true} />
+            <StatusBar hidden={false} />
             <Stack.Navigator
                 headerMode="float"
                 screenOptions={{
@@ -39,7 +54,8 @@ export default function StackFavoris(props){
                             fontSize: width < 400 ? 20 : 25,
                             color: '#5A2A75'
                         },
-                        headerRight: () => setBurger(props.navigation)
+                        headerRight: () => setBurger(props.navigation),
+                        headerLeft: () => goBack(props.navigation, "Actualités")
                     }}
                 />
             </Stack.Navigator>

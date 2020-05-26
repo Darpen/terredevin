@@ -2,12 +2,15 @@ import React from 'react'
 import { Text, View, StyleSheet, Image, Dimensions } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
+// Récupération de la largeur de la fenêtre
 const { width } = Dimensions.get("window")
 
 export default function Event(props){
 
+    // Récupération de l'url de l'image
     const source = props.event.description.split('<')[2].split('=')[3].split('"')[1]
 
+    // Récupération des dates de début et de fin de l'événement
     function getDates() {
         const startDate = props.event.startdate.split(" ")
         const endDate = props.event.enddate.split(" ")
@@ -19,6 +22,7 @@ export default function Event(props){
         )
     }
 
+    // Récupération des heures de début et de fin de l'événement
     function getTimes() {
         const startDate = props.event.startdate.split(" ")
         const endDate = props.event.enddate.split(" ")
@@ -27,8 +31,6 @@ export default function Event(props){
             "-" + endDate[3] + "h" + endDate[5]
         )
     }
-
-    console.log(props)
 
     return(
         <TouchableOpacity
@@ -63,7 +65,7 @@ const style = StyleSheet.create({
         marginRight: 15,
     },
     title: {
-        fontFamily: 'Sen-Bold',
+        fontFamily: "Sen-Bold",
         fontSize: width < 400 ? 13 : 15,
         color: "#404040",
         textAlign: "right",

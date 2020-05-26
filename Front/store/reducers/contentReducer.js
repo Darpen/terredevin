@@ -3,7 +3,8 @@
  */
 const initialState = {
     posts: [],
-    events: []
+    events: [],
+    degustations: []
 }
 
 /**
@@ -35,6 +36,17 @@ function handleContent(state = initialState, action){
                 }
                 return nextState || state
                 break
+            
+            case "UPDATE_DEGUSTATIONS":
+                if (state.degustations[0] !== action.value.data[0]) {
+                    nextState = {
+                        ...state,
+                        degustations: action.value.data
+                    }
+                }
+                return nextState || state
+                break
+            
             default:
                 return state // Si pas de changement détecté, on retourn le state initial
         }   
